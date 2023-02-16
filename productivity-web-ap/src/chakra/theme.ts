@@ -8,7 +8,7 @@ import "@fontsource/open-sans/700.css"
 export const theme = extendTheme({
   colors: {
     brand: {
-      100: "#d1453b",
+      100: "#db4c3f",
     },
     fonts: {
         body: 'Open Sans, sans-serif'
@@ -19,6 +19,9 @@ export const theme = extendTheme({
                 bg: "Gray.50"
             }
         })
+    },
+    components: {
+      //Button
     }
   },
 })
