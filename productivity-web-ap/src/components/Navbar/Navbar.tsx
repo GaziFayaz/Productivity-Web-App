@@ -1,13 +1,37 @@
-import { Flex } from '@chakra-ui/react';
-import React from 'react';
-import SearchInput from './SearchInput';
+import { Flex, Image, Spacer } from "@chakra-ui/react";
+import React, { useState } from "react";
+import HomeButton from "./HomeButton";
+import RightContent from "./RightContent/RightContent";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/clientApp";
+import SearchInput from "./SearchInput";
+import SidebarIcon from "./SidebarIcon";
 
-const Navbar:React.FC = () => {
-    
-    return (
-        <Flex bg={"brand.100"} height={"44px"} padding={"6px 12px"} >
-            <SearchInput />
+const Navbar: React.FC = () => {
+  const [user, loading, error] = useAuthState(auth);
+  return (
+    <>
+      {user ? (
+        <Flex bg="brand.100" height={"44px"} padding={"6px 12px"}>
+          <SidebarIcon />
+          <HomeButton />
+          <SearchInput />
+          <Spacer />
+          <RightContent user={user} />
         </Flex>
-    )
-}
+      ) : (
+        <Flex bg="gray.100" height={"44px"} padding={"6px 12px"}>
+          <Flex align={"center"}>
+            <Image
+              src="/images/track-easy-logo-zip-file/svg/logo-no-background.svg"
+              height="27px"
+            />
+          </Flex>
+          <Spacer />
+          <RightContent />
+        </Flex>
+      )}
+    </>
+  );
+};
 export default Navbar;
