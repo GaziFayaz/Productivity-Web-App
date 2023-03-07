@@ -1,27 +1,11 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/clientApp";
 import {
   Flex,
-  Heading,
-  Avatar,
-  AvatarGroup,
-  Text,
-  Icon,
-  IconButton,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Divider,
-  Link,
-  Box,
-  Button,
-  Input,
-  InputGroup,
-  InputLeftElement,
+
 } from "@chakra-ui/react";
 
 interface LayoutProps {
@@ -29,12 +13,18 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [user, loading, error] = useAuthState(auth);
   return (
     <>
-      {<Navbar />}
-      <Flex h="100vh" flexDir="row" overflow="hidden" maxW="1000px">
-        <Sidebar />
+    {<Navbar />}
+    {user ? (
+      <Flex h="100vh" flexDir="row" overflow="hidden" maxW="2000px">
+        <Sidebar />   
       </Flex>
+    ) : <></>     
+    }
+      
+      
       <main>{children}</main>
     </>
   );
