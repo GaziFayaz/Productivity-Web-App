@@ -25,6 +25,7 @@ const Navbar: React.FC = () => {
             <Image
               src="/images/track-easy-logo-zip-file/svg/logo-no-background.svg"
               height="27px"
+              alt="Trackeasy"
             />
           </Flex>
           <Spacer />

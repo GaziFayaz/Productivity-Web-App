@@ -44,7 +44,7 @@ function Sidebar() {
           <Flex className="p-projects" paddingTop="10">
             <Flex>
               <Link _hover={{ textDecor: "none" }}>
-                <Text fontSize="md">Parsonal Projects</Text>
+                <Text fontSize="md">Personal Projects</Text>
               </Link>
               <Link>
                 <Icon
