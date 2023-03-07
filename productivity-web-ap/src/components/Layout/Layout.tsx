@@ -32,9 +32,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       {<Navbar />}
-      <Flex h="100vh" flexDir="row" overflow="hidden" maxW="2000px">
+      <Flex h="100vh" flexDir="row" overflow="hidden" maxW="1000px">
         <Sidebar />
-        
       </Flex>
       <main>{children}</main>
     </>
