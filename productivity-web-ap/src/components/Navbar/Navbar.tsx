@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
         <Flex bg="gray.100" height={"44px"} padding={"6px 12px"}>
           <Flex align={"center"}>
             <Image
-              src="/images/track-easy-logo-zip-file/svg/logo-no-background.svg"
+              src="/images/logo-no-background.svg"
               height="27px"
               alt="Trackeasy"
             />
