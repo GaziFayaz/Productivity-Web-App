@@ -25,7 +25,7 @@ import TaskCategory from "./TaskCategory";
 import { auth } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
 
-const TaskModal: React.FC = () => {
+const TaskModalIcon: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user, loading, error] = useAuthState(auth);
   const [taskName, setTaskName] = useState("");
@@ -96,4 +96,4 @@ const TaskModal: React.FC = () => {
     </>
   );
 };
-export default TaskModal;
+export default TaskModalIcon;
