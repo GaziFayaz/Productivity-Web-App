@@ -46,7 +46,7 @@ const TaskModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon cursor="pointer" onClick={onOpen} />
+      <AddIcon cursor="pointer" onClick={onOpen}/>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -56,7 +56,12 @@ const TaskModalIcon: React.FC = () => {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Task Name</FormLabel>
-              <Input value={taskName} size="xs" variant="flushed" onChange={handleChangeDesc} />
+              <Input
+                value={taskName}
+                size="xs"
+                variant="flushed"
+                onChange={handleChangeTask}
+              />
             </FormControl>
 
             <FormControl mt={4}>
@@ -65,7 +70,7 @@ const TaskModalIcon: React.FC = () => {
                 value={desc}
                 size="xs"
                 variant="flushed"
-                onChange={handleChangeTask}
+                onChange={handleChangeDesc}
               />
             </FormControl>
             <Stack direction="row" spacing={4} align="center" paddingTop="4">

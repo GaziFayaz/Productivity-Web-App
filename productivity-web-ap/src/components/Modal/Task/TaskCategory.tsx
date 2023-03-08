@@ -13,10 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
-type Props = {};
+type TaskCategoryProps = {};
 
-const TaskCategory = (props: Props) => {
-  let cats = "Home work";
+const TaskCategory: React.FC = () => {
   const [category, setCategory] = useState("Inbox");
   const handleChangecategtory = (e: any) => {
     setCategory(e.target.name);
@@ -29,8 +28,15 @@ const TaskCategory = (props: Props) => {
         </MenuButton>
         <MenuList>
           {/* category will be imported from database */}
-          <MenuItem onClick={handleChangecategtory} name={cats}>
-            {cats}
+          <MenuItem fontSize="xs" onClick={handleChangecategtory} name="Inbox">
+            Inbox
+          </MenuItem>
+          <MenuItem
+            fontSize="xs"
+            onClick={handleChangecategtory}
+            name="Home Work"
+          >
+            Home Work
           </MenuItem>
         </MenuList>
       </Menu>
