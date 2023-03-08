@@ -5,6 +5,7 @@ import { FaInbox } from "react-icons/fa";
 import { FiCircle } from "react-icons/fi";
 import { RiInboxFill, RiCalendar2Line } from "react-icons/ri";
 import { MdAssignment, MdCalendarToday } from "react-icons/md";
+import ProjectModalIcon from "../Modal/Project/ProjectModalIcon";
 
 function Sidebar() {
   return (
@@ -52,7 +53,7 @@ function Sidebar() {
           </Link>
           <Spacer />
           <Link href="">
-            <AddIcon color={"gray.500"} />
+            <ProjectModalIcon/>
           </Link>
         </Flex>
         <Flex flexDir={"column"} pt={2} pl={2}>
