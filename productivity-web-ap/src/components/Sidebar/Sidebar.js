@@ -40,7 +40,7 @@ function Sidebar() {
               <Text marginLeft="1em">Upcoming</Text>
             </Link>
           </Flex>
-          {/* parsonal projects */}
+          {/* personal projects */}
           <Flex className="p-projects" paddingTop="10">
             <Flex>
               <Link _hover={{ textDecor: "none" }}>

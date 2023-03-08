@@ -6,6 +6,9 @@ import AuthButtons from "./AuthButtons";
 import UserMenu from "./UserMenu";
 import { auth } from "@/firebase/clientApp";
 import { signOut, User } from "firebase/auth";
+import { Button } from "@chakra-ui/react";
+import { useSetRecoilState } from "recoil";
+import TaskModal from "@/components/Modal/Task/TaskModal";
 
 type RightContentProps = {
   user?: User | null;
@@ -17,7 +20,9 @@ const RightContent: React.FC<RightContentProps> = ({ user }) => {
       <AuthModal />
       {user ? (
         <>
-          <AddIcon color={"gray.100"} />
+          {/* add task icon */}
+
+          <TaskModal />
           <UserMenu user={user} />
         </>
       ) : (
