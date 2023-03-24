@@ -37,15 +37,17 @@ const ProjectModalIcon: React.FC = () => {
   const [projectName, setProjectName] = useState("");
   const [color, setColor] = useState("Red");
   const [colorValue, setColorValue] = useState("#E53E3E");
+  
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
   };
   const handleChangeColor = (event: any) => {
-    if(color && colorValue){
-      let colorArray = event.target.value.split(",")
-    console.log(colorArray);
-    setColor(colorArray[0]);
-    setColorValue(colorArray[1])
+    if (event.target.value) {
+      console.log(event.target.value);
+      const colorArray = event.target.value.split(",");
+      
+      setColor(colorArray[0]);
+      setColorValue(colorArray[1]);
     }
   };
 
@@ -90,29 +92,59 @@ const ProjectModalIcon: React.FC = () => {
                   </Flex>
                 </MenuButton>
                 <MenuList>
-                  <MenuItem value={["Red", "#E53E3E"]} onClick={handleChangeColor}>
-                    <FiCircle fill="#E53E3E" color={"#E53E3E"}  />
-                    <Text ml={2} fontWeight={"bold"}>Red</Text>
+                  <MenuItem
+                    value={["Red", "#E53E3E"]}
+                    onClick={handleChangeColor}
+                  >
+                    <FiCircle fill="#E53E3E" color={"#E53E3E"} />
+                    <Text ml={2} fontWeight={"bold"}>
+                      Red
+                    </Text>
                   </MenuItem>
-                  <MenuItem value={["Blue", "#4299E1"]} onClick={handleChangeColor}>
+                  <MenuItem
+                    value={["Blue", "#4299E1"]}
+                    onClick={handleChangeColor}
+                  >
                     <FiCircle fill="#4299E1" color={"#4299E1"} />
-                    <Text ml={2} fontWeight={"bold"}>Blue</Text>
+                    <Text ml={2} fontWeight={"bold"}>
+                      Blue
+                    </Text>
                   </MenuItem>
-                  <MenuItem value={["Green", "#48BB78"]} onClick={handleChangeColor}>
+                  <MenuItem
+                    value={["Green", "#48BB78"]}
+                    onClick={handleChangeColor}
+                  >
                     <FiCircle fill="#48BB78" color={"#48BB78"} />
-                    <Text ml={2} fontWeight={"bold"}>Green</Text>
+                    <Text ml={2} fontWeight={"bold"}>
+                      Green
+                    </Text>
                   </MenuItem>
-                  <MenuItem value={["Yellow", "#F6E05E"]} onClick={handleChangeColor}>
+                  <MenuItem
+                    value={["Yellow", "#F6E05E"]}
+                    onClick={handleChangeColor}
+                  >
                     <FiCircle fill="#F6E05E" color={"#F6E05E"} />
-                    <Text ml={2} fontWeight={"bold"}>Yellow</Text>
+                    <Text ml={2} fontWeight={"bold"}>
+                      Yellow
+                    </Text>
                   </MenuItem>
-                  <MenuItem value={["Purple", "#805AD5"]} onClick={handleChangeColor}>
+                  <MenuItem
+                    value={["Purple", "#805AD5"]}
+                    onClick={handleChangeColor}
+                  >
                     <FiCircle fill="#805AD5" color={"#805AD5"} />
-                    <Text ml={2} fontWeight={"bold"}>Purple</Text>
+                    <Text ml={2} fontWeight={"bold"}>
+                      Purple
+                    </Text>
                   </MenuItem>
-                  <MenuItem value={["Orange", "#ED8936"]} onClick={handleChangeColor}>
+                  <MenuItem
+                    value={["Orange", "#ED8936"]}
+                    onClick={handleChangeColor}
+                  >
                     <FiCircle fill="#ED8936" color={"#ED8936"} />
-                    <Text ml={2} fontWeight={"bold"}>Orange</Text>
+                    <Text ml={2} fontWeight={"bold"}>
+                      Orange
+                    </Text>
                   </MenuItem>
                 </MenuList>
               </Menu>
