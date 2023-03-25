@@ -23,7 +23,7 @@ function Sidebar() {
             <Link href="">
               <Icon as={RiInboxFill} color="blue.400" fontSize="22" />
             </Link>
-            <Link href="" _hover={{ textDecor: "none" }}>
+            <Link href="/inbox" _hover={{ textDecor: "none" }}>
               <Text marginLeft="1em">Inbox</Text>
             </Link>
           </Flex>
@@ -31,7 +31,7 @@ function Sidebar() {
             <Link href="">
               <Icon as={MdAssignment} color="green.400" fontSize="22" />
             </Link>
-            <Link href="" _hover={{ textDecor: "none" }}>
+            <Link href="/today" _hover={{ textDecor: "none" }}>
               <Text marginLeft="1em">Today</Text>
             </Link>
           </Flex>
@@ -40,7 +40,7 @@ function Sidebar() {
             <Link href="">
               <Icon as={RiCalendar2Line} color="purple.500" fontSize="21" />
             </Link>
-            <Link href="" _hover={{ textDecor: "none" }}>
+            <Link href="/upcoming" _hover={{ textDecor: "none" }}>
               <Text marginLeft="1em">Upcoming</Text>
             </Link>
           </Flex>

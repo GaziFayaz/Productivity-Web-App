@@ -46,7 +46,7 @@ const TaskModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon cursor="pointer" onClick={onOpen}/>
+      <AddIcon cursor="pointer" onClick={onOpen} />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
