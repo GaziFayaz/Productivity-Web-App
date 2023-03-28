@@ -26,18 +26,27 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/clientApp";
+import { auth, firestore } from "@/firebase/clientApp";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { FiCircle } from "react-icons/fi";
+import {
+  collection,
+  collectionGroup,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 
 const ProjectModalIcon: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [color, setColor] = useState("Red");
   const [colorValue, setColorValue] = useState("#E53E3E");
-  
+
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
   };
@@ -45,10 +54,39 @@ const ProjectModalIcon: React.FC = () => {
     if (event.target.value) {
       console.log(event.target.value);
       const colorArray = event.target.value.split(",");
-      
+
       setColor(colorArray[0]);
       setColorValue(colorArray[1]);
     }
+  };
+
+  const handleCreateProject = async () => {
+    // ** implement error handling later **
+    if (error) setError("");
+    setLoading(true);
+
+    try {
+      // Create the Project document in firestore
+
+      const data = {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp(),
+        projectName: projectName,
+        color: color,
+        colorValue: colorValue,
+        numberOfMembers: 1,
+        members: [user?.uid],
+        numberOfSections: 0,
+        sections: [],
+      };
+      const projectDocRef = doc(collection(firestore, "projects"));
+      await setDoc(projectDocRef, data);
+      onClose();
+    } catch (error: any) {
+      console.log("handleCreateProject error", error);
+      setError(error.message);
+    }
+    setLoading(false);
   };
 
   return (
@@ -154,7 +192,12 @@ const ProjectModalIcon: React.FC = () => {
           <ModalFooter>
             <Spacer />
             <Flex>
-              <Button colorScheme="blue" mr={3}>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={handleCreateProject}
+                isLoading={loading}
+              >
                 Add
               </Button>
               <Button onClick={onClose}>Cancel</Button>

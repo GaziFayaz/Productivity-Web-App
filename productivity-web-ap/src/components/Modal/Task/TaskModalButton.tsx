@@ -1,7 +1,19 @@
 import {
-  Button, Flex, FormControl,
+  Button,
+  Flex,
+  FormControl,
   FormLabel,
-  Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Spacer, Stack, Text, useDisclosure
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Spacer,
+  Stack,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -9,9 +21,7 @@ import TaskCategory from "./TaskCategory";
 
 import { auth, firestore } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
-import {
-  collection, doc, serverTimestamp, setDoc
-} from "firebase/firestore";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const TaskModalButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,10 +63,14 @@ const TaskModalButton: React.FC = () => {
         dueDate: dueDate,
         priority: priority,
         label: label,
+        isAssigned: false,
+        assignedTo: null,
+        isInProject: false,
+        fromProject: null,
       };
       const taskDocRef = doc(collection(firestore, "tasks"));
       await setDoc(taskDocRef, data);
-      onClose()
+      onClose();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);

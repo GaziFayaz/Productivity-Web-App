@@ -63,10 +63,14 @@ const TaskModalIcon: React.FC = () => {
         dueDate: dueDate,
         priority: priority,
         label: label,
+        isAssigned: false,
+        assignedTo: null,
+        isInProject: false,
+        fromProject: null,
       };
       const taskDocRef = doc(collection(firestore, "tasks"));
       await setDoc(taskDocRef, data);
-      onClose()
+      onClose();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);
@@ -118,7 +122,12 @@ const TaskModalIcon: React.FC = () => {
             <TaskCategory />
             <Spacer />
             <Flex>
-              <Button colorScheme="blue" mr={3} onClick={handleCreateTask} isLoading={loading}>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={handleCreateTask}
+                isLoading={loading}
+              >
                 Add
               </Button>
               <Button onClick={onClose}>Cancel</Button>
