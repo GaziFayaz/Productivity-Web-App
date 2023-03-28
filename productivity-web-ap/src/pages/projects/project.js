@@ -10,14 +10,17 @@ import {
 import React from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
-import TaskModalButton from "@/components/Modal/Task/TaskModalButton"
+import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
+import { useRouter } from "next/router";
 
-const project = () => {
+const Project = () => {
+  const router = useRouter();
   return (
     <Flex w="80vw" flexDir={"column"} pt={10} pl={20} pr={20} pb={10}>
       <Flex className="projectContent" flexDir={"column"} w="55vw">
         <Flex className="ProjectHeader" alignItems={"center"}>
           <Text className="ProjectName" fontSize={"larger"} fontWeight={"bold"}>
+            {router.pathname}
             Education
           </Text>
           <Spacer />
@@ -82,4 +85,4 @@ const project = () => {
   );
 };
 
-export default project;
+export default Project;
