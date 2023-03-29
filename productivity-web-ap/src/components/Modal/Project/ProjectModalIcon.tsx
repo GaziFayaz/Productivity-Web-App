@@ -91,7 +91,7 @@ const ProjectModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon color={"gray.500"} cursor="pointer" onClick={onOpen} />
+      <AddIcon color={"gray.500"} cursor="pointer" _hover={{color: "gray.800"}} onClick={onOpen} />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

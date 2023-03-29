@@ -14,6 +14,7 @@ import {
   Stack,
   useDisclosure,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -80,7 +81,14 @@ const TaskModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon cursor="pointer" onClick={onOpen} />
+      <Flex  height={8} width={8} alignItems={"center"} justifyContent={"center"}
+      color="white" borderRadius={"sm"} _hover={{backgroundColor:"rgba(255, 255, 255, 0.2)"}}>
+        <AddIcon
+          cursor="pointer"
+          onClick={onOpen}
+        />
+      </Flex>
+        
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

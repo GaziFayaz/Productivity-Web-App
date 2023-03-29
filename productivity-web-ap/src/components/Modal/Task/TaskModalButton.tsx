@@ -83,26 +83,27 @@ const TaskModalButton: React.FC = () => {
       <Button
         p={0}
         m={0}
-        fontSize={5}
-        _hover={{
-          backgroundColor: "gray.300",
-        }}
         onClick={onOpen}
+        role="group"
+        backgroundColor={"white"}
+        _hover={{backgroundColor:"white"}}
       >
         <Flex
           className="addTaskButton"
           alignItems={"center"}
-          justifyContent={"center"}
           gap={1}
+          
         >
           <AddIcon
             className="addIcon"
-            color={"brand.100"}
+            borderRadius={"full"}
             fontSize={"16"}
             p={0.5}
+            color={"brand.100"}
+            _groupHover={{color: "white", backgroundColor:"brand.100"}}
           />
 
-          <Text color={"brand.100"} fontSize={"sm"}>
+          <Text fontSize={"sm"} color={"gray.500"} _groupHover={{color:"brand.100"}}>
             Add Task
           </Text>
         </Flex>
