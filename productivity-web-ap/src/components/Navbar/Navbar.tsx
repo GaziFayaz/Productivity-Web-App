@@ -12,7 +12,13 @@ const Navbar: React.FC = () => {
   return (
     <>
       {user ? (
-        <Flex bg="brand.100" height={"44px"} padding={"6px 12px"}>
+        <Flex
+          bg="brand.100"
+          height={"44px"}
+          padding={"6px 12px"}
+          w="100%"
+          // position={"fixed"}
+        >
           <SidebarIcon />
           <HomeButton />
           <SearchInput />

@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       {<Navbar />}
-      <Flex h="100vh" flexDir="row" overflow="hidden" maxW="2000px">
+      <Flex h="container.xl" flexDir="row" overflow="hidden" maxW="2000px">
         {user ? (
           <>
             <Sidebar />

@@ -15,22 +15,33 @@ import {
   MenuGroup,
   MenuOptionGroup,
   MenuDivider,
+  Link,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { IoIosRadioButtonOff } from "react-icons/io";
+
 // import DateTimePicker from "react-datetime-picker";
 import DateTimePicker from "react-datetime-picker/dist/entry.nostyle";
-
+import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import DatetimePicker from "../components/Modal/Task/DatetimePicker";
+import { useRouter } from "next/router";
+import ScrollToTop from "../components/SideComponents/ScrollToTop";
 export default function Upcoming() {
+  const router = useRouter();
   var today = new Date();
-  var date =
-    today.toLocaleString("default", { month: "long" }) + " " + today.getDate();
+  console.log("isoString" + today.toISOString().substr(0, 10));
+  var endDate = new Date(
+    `${today.getFullYear() + 1}-${today.getMonth() + 1}-${today.getDate()}`
+  );
+  const dates = [];
+  for (let date = today; date <= endDate; date.setDate(date.getDate() + 1)) {
+    dates.push(new Date(date));
+  }
+  console.log("endDAte: " + endDate);
   const toast = useToast();
   const [value, onChange] = useState(new Date());
   const completeTask = () => {
@@ -64,7 +75,7 @@ export default function Upcoming() {
     });
   };
   return (
-    <Flex w="80vw" flexDir={"column"} pt={10} pl={20} pr={20} pb={10}>
+    <Flex w="80vw" flexDir={"column"} h="100%" pt={10} pl={20} pr={20} pb={10}>
       <Flex className="upcomingContent" flexDir={"column"} w="55vw">
         <Flex className="upcomingHeader" alignItems={"center"} flexDir="row">
           <Menu isLazy>
@@ -72,7 +83,9 @@ export default function Upcoming() {
               <Flex flexDir={"row"}>
                 {value.toLocaleString("default", { month: "long" }) +
                   " " +
-                  value.getDate()}
+                  value.getDate() +
+                  " " +
+                  value.getFullYear()}
                 <ChevronDownIcon
                   cursor={"pointer"}
                   marginLeft="1"
@@ -87,12 +100,22 @@ export default function Upcoming() {
               <DateTimePicker value={value} onChange={onChange} />
             </MenuList>
           </Menu>
+          <Link
+            _hover={{ textDecor: "none" }}
+            href={`#${value.toDateString()}`}
+          >
+            <Button colorScheme="red" variant="ghost">
+              Search Selected Date
+            </Button>
+          </Link>
         </Flex>
-        <Flex className="upcomingBody" pr={10} pt={10} flexDir="column">
+        {/* Overdue Section */}
+        <Flex className="overdue" pr={10} pt={10} flexDir="column">
           <Heading as="md" size="md">
             Overdue
           </Heading>
-          <Flex flexDir={"row"} paddingTop="4">
+          {/* task Section */}
+          <Flex className="taskSection" flexDir={"row"} paddingTop="4">
             <Flex flexDir={"row"} gap="2" flexGrow={1}>
               <Flex>
                 <Icon
@@ -117,7 +140,7 @@ export default function Upcoming() {
               <Icon as={AiOutlineEdit} fontSize="18" color={"gray.500"} />
             </Flex>
           </Flex>
-          <Flex flexDir={"row"} paddingTop="4">
+          {/* <Flex flexDir={"row"} paddingTop="4">
             <Flex flexDir={"row"} gap="2" flexGrow={1}>
               <Flex>
                 <Icon
@@ -132,17 +155,35 @@ export default function Upcoming() {
 
               <Flex flexDir={"column"}>
                 {/* task1 */}
-                <Text>sdaaaaaaasada asdassadasdasdasdasdasdasda</Text>
+          {/* <Text>sdaaaaaaasada asdassadasdasdasdasdasdasda</Text>
                 <Text fontSize="xs">20 march</Text>
               </Flex>
-            </Flex>
+            </Flex> */}
 
-            {/* edit,delete section */}
-            <Flex ml={20}>
+          {/* edit,delete section */}
+          {/* <Flex ml={20}>
               <Icon as={AiOutlineEdit} fontSize="18" color={"gray.500"} />
             </Flex>
-          </Flex>
+          </Flex> */}
         </Flex>
+        <Flex className="upcomingTasks" flexDir={"column"} marginTop={2}>
+          {dates.map((date, index) => (
+            <Flex key={index} flexDir="column">
+              <Heading
+                key={index}
+                size="sm"
+                color={"grey"}
+                id={date.toDateString()}
+              >
+                {date.toDateString()}
+              </Heading>
+              <Flex>
+                <TaskModalButton />
+              </Flex>
+            </Flex>
+          ))}
+        </Flex>
+        <ScrollToTop />
       </Flex>
     </Flex>
   );

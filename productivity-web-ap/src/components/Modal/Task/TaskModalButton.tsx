@@ -70,6 +70,7 @@ const TaskModalButton: React.FC = () => {
         p={0}
         m={0}
         fontSize={5}
+        variant="ghost"
         _hover={{
           backgroundColor: "gray.300",
         }}
