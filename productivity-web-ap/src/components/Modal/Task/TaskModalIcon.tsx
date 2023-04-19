@@ -14,6 +14,7 @@ import {
   Stack,
   useDisclosure,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -63,10 +64,14 @@ const TaskModalIcon: React.FC = () => {
         dueDate: dueDate,
         priority: priority,
         label: label,
+        isAssigned: false,
+        assignedTo: null,
+        isInProject: false,
+        fromProject: null,
       };
       const taskDocRef = doc(collection(firestore, "tasks"));
       await setDoc(taskDocRef, data);
-      onClose()
+      onClose();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);
@@ -76,7 +81,14 @@ const TaskModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon cursor="pointer" onClick={onOpen} />
+      <Flex  height={8} width={8} alignItems={"center"} justifyContent={"center"}
+      color="white" borderRadius={"sm"} _hover={{backgroundColor:"rgba(255, 255, 255, 0.2)"}}>
+        <AddIcon
+          cursor="pointer"
+          onClick={onOpen}
+        />
+      </Flex>
+        
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -118,7 +130,12 @@ const TaskModalIcon: React.FC = () => {
             <TaskCategory />
             <Spacer />
             <Flex>
-              <Button colorScheme="blue" mr={3} onClick={handleCreateTask} isLoading={loading}>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={handleCreateTask}
+                isLoading={loading}
+              >
                 Add
               </Button>
               <Button onClick={onClose}>Cancel</Button>

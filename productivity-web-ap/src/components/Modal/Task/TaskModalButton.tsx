@@ -1,7 +1,19 @@
 import {
-  Button, Flex, FormControl,
+  Button,
+  Flex,
+  FormControl,
   FormLabel,
-  Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Spacer, Stack, Text, useDisclosure
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Spacer,
+  Stack,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -9,9 +21,7 @@ import TaskCategory from "./TaskCategory";
 
 import { auth, firestore } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
-import {
-  collection, doc, serverTimestamp, setDoc
-} from "firebase/firestore";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const TaskModalButton: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,10 +63,14 @@ const TaskModalButton: React.FC = () => {
         dueDate: dueDate,
         priority: priority,
         label: label,
+        isAssigned: false,
+        assignedTo: null,
+        isInProject: false,
+        fromProject: null,
       };
       const taskDocRef = doc(collection(firestore, "tasks"));
       await setDoc(taskDocRef, data);
-      onClose()
+      onClose();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);
@@ -69,27 +83,27 @@ const TaskModalButton: React.FC = () => {
       <Button
         p={0}
         m={0}
-        fontSize={5}
-        variant="ghost"
-        _hover={{
-          backgroundColor: "gray.300",
-        }}
         onClick={onOpen}
+        role="group"
+        backgroundColor={"white"}
+        _hover={{backgroundColor:"white"}}
       >
         <Flex
           className="addTaskButton"
           alignItems={"center"}
-          justifyContent={"center"}
           gap={1}
+          
         >
           <AddIcon
             className="addIcon"
-            color={"brand.100"}
+            borderRadius={"full"}
             fontSize={"16"}
             p={0.5}
+            color={"brand.100"}
+            _groupHover={{color: "white", backgroundColor:"brand.100"}}
           />
 
-          <Text color={"brand.100"} fontSize={"sm"}>
+          <Text fontSize={"sm"} color={"gray.500"} _groupHover={{color:"brand.100"}}>
             Add Task
           </Text>
         </Flex>
