@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TaskCategory from "./TaskCategory";
 
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, db } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
@@ -69,7 +69,7 @@ const TaskModalIcon: React.FC = () => {
         isInProject: false,
         fromProject: null,
       };
-      const taskDocRef = doc(collection(firestore, "tasks"));
+      const taskDocRef = doc(collection(db, "tasks"));
       await setDoc(taskDocRef, data);
       onClose();
     } catch (error: any) {
@@ -88,8 +88,8 @@ const TaskModalIcon: React.FC = () => {
           onClick={onOpen}
         />
       </Flex>
-        
 
+      
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

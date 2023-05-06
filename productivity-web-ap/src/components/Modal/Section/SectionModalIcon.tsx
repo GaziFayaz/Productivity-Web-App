@@ -1,4 +1,4 @@
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, db } from "@/firebase/clientApp";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -52,7 +52,7 @@ const SectionModalIcon: React.FC = () => {
         tasks: [],
         
       };
-      const sectionDocRef = doc(collection(firestore, "sections"));
+      const sectionDocRef = doc(collection(db, "sections"));
       await setDoc(sectionDocRef, data);
       onClose()
     } catch (error: any) {

@@ -1,4 +1,4 @@
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, db } from "@/firebase/clientApp";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -18,7 +18,7 @@ import {
   ModalOverlay,
   Spacer,
   Text,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
@@ -37,7 +37,7 @@ const ProjectModalIcon: React.FC = () => {
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
   };
-sec
+  
   const handleChangeColor = (event: any) => {
     if (event.target.value) {
       console.log(event.target.value);
@@ -67,7 +67,7 @@ sec
         numberOfSections: 0,
         sections: [],
       };
-      const projectDocRef = doc(collection(firestore, "projects"));
+      const projectDocRef = doc(collection(db, "projects"));
       await setDoc(projectDocRef, data);
       onClose();
     } catch (error: any) {

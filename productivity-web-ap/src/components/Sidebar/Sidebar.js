@@ -14,12 +14,18 @@ function Sidebar() {
       flexDir="column"
       alignItems="left"
       backgroundColor="#FAFAFA"
+      h="100vh"
       // color="#fff"
       pl={5}
     >
       <Flex flexDir={"column"}>
-        <Flex flexDir={"column"} align="flex-start" justifyContent="left" paddingTop="10">
-          <Flex className="sidebar-items" >
+        <Flex
+          flexDir={"column"}
+          align="flex-start"
+          justifyContent="left"
+          paddingTop="10"
+        >
+          <Flex className="sidebar-items">
             <Link href="">
               <Icon as={RiInboxFill} color="blue.400" fontSize="22" />
             </Link>
@@ -53,16 +59,24 @@ function Sidebar() {
           </Link>
           <Spacer />
           <Link href="">
-            <ProjectModalIcon/>
+            <ProjectModalIcon />
           </Link>
         </Flex>
         <Flex flexDir={"column"} pt={2} pl={2}>
           <Link href={"/projects/project"}>
             <Flex justifyContent={"left"} alignItems={"center"}>
               <FiCircle className="projectColor" fill="#AAAAAA" color="white" />
-              <Text className="projectName" pl={2}>Education</Text>
+              <Text className="projectName" pl={2}>
+                Education
+              </Text>
               <Spacer />
-              <Text className="projectTaskCount" color={"gray.400"} fontSize={"sm"} >3</Text>
+              <Text
+                className="projectTaskCount"
+                color={"gray.400"}
+                fontSize={"sm"}
+              >
+                3
+              </Text>
             </Flex>
           </Link>
         </Flex>
