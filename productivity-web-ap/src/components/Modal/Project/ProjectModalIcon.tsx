@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, db } from "@/firebase/clientApp";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { FiCircle } from "react-icons/fi";
@@ -79,7 +79,7 @@ const ProjectModalIcon: React.FC = () => {
         numberOfSections: 0,
         sections: [],
       };
-      const projectDocRef = doc(collection(firestore, "projects"));
+      const projectDocRef = doc(collection(db, "projects"));
       await setDoc(projectDocRef, data);
       onClose();
     } catch (error: any) {

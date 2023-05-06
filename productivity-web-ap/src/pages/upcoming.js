@@ -140,31 +140,6 @@ export default function Upcoming() {
               <Icon as={AiOutlineEdit} fontSize="18" color={"gray.500"} />
             </Flex>
           </Flex>
-          {/* <Flex flexDir={"row"} paddingTop="4">
-            <Flex flexDir={"row"} gap="2" flexGrow={1}>
-              <Flex>
-                <Icon
-                  as={IoIosRadioButtonOff}
-                  fontSize="22"
-                  color={"red.500"}
-                  paddingTop="1"
-                  cursor="pointer"
-                  onClick={completeTask}
-                />
-              </Flex>
-
-              <Flex flexDir={"column"}>
-                {/* task1 */}
-          {/* <Text>sdaaaaaaasada asdassadasdasdasdasdasdasda</Text>
-                <Text fontSize="xs">20 march</Text>
-              </Flex>
-            </Flex> */}
-
-          {/* edit,delete section */}
-          {/* <Flex ml={20}>
-              <Icon as={AiOutlineEdit} fontSize="18" color={"gray.500"} />
-            </Flex>
-          </Flex> */}
         </Flex>
         <Flex className="upcomingTasks" flexDir={"column"} marginTop={2}>
           {dates.map((date, index) => (
