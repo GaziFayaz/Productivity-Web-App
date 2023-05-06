@@ -1,42 +1,29 @@
+import { auth, firestore } from "@/firebase/clientApp";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  useDisclosure,
   Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Flex,
-  Text,
-  useFocusEffect,
   FormControl,
   FormLabel,
   Input,
-  Grid,
-  Stack,
-  Spacer,
-  Icon,
-  Select,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Spacer,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, firestore } from "@/firebase/clientApp";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { FiCircle } from "react-icons/fi";
-import {
-  collection,
-  collectionGroup,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
 
 const ProjectModalIcon: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,6 +37,7 @@ const ProjectModalIcon: React.FC = () => {
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
   };
+sec
   const handleChangeColor = (event: any) => {
     if (event.target.value) {
       console.log(event.target.value);
@@ -91,7 +79,12 @@ const ProjectModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon color={"gray.500"} cursor="pointer" _hover={{color: "gray.800"}} onClick={onOpen} />
+      <AddIcon
+        color={"gray.500"}
+        cursor="pointer"
+        _hover={{ color: "gray.800" }}
+        onClick={onOpen}
+      />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
