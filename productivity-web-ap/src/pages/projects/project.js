@@ -14,8 +14,15 @@ import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
 import SectionModalIcon from "@/components/Modal/Section/SectionModalIcon";
 import { useRouter } from "next/router";
 import { FiPlusSquare } from "react-icons/fi";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { auth, firestore } from "@/firebase/clientApp";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
@@ -32,30 +39,110 @@ import {
 
 const Project = () => {
   const router = useRouter();
-  const [projectName, setProjectName] = useState("")
+  const [projectId, setProjectId] = useState("weMmrFmJulqnB8uQ8qwv"); // Id needs to be dynamically added later
+  const [project, setProject] = useState("");
+  const [sectionArray, setSectionArray] = useState({});
+  const [taskArray, setTaskArray] = useState({})
   const [sectionAdd, setSectionAdd] = useState(false);
 
   useEffect(() => {
-    getData();
+    // useEffect to get the project data and have it in project state
+    getProject();
   }, []);
 
-  const getData =async () => {
+  useEffect(() => {
+    // useEffect to get the sections of the project only when project state is assigned
+    if (!project) {
+      return;
+    }
+    getSection();
+  }, [project]);
 
-    const q = query(collection(firestore, "projects"));
+  useEffect(() => {
+    // useEffect to get the tasks of the sections on when section array is updated
+    if(!sectionArray) return;
+    getTask();
+  }, [sectionArray])
 
-const querySnapshot = await getDocs(q);
-querySnapshot.forEach((doc) => {
-  // doc.data() is never undefined for query doc snapshots
-  console.log(doc.id, " => ", doc.data());
-  setProjectName(doc.data().projectName)
-  forEach
-});
-    return () => {};
+  const getProject = async () => {
+    const projectRef = doc(db, "projects", projectId);
+    const projectSnap = await getDoc(projectRef)
+    setProject(projectSnap.data());
+    console.log("Document data:", project);
+    console.log("Document Id:", projectSnap.id)
   };
+
+  const getSection = async () => {
+
+    // gets all the sections from project and stores them in an array like a dictionary where key = sectionId and value is the sectionObject
+    project.sections.map(async (section) => {
+      const secRef = doc(db, "sections", section);
+      const secSnap = await getDoc(secRef);
+      if (secSnap.exists()) {
+        console.log("section data:", secSnap.data());
+        setSectionArray(current => ({...current, [secSnap.id]: secSnap.data()}))
+        
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such section!");
+      }
+    });
+  };
+
+  const getTask = async () => {
+    console.log(sectionArray)
+    for (var section in sectionArray) {
+      console.log(section+ " : " +sectionArray[section].tasks)
+      for (var task in sectionArray[section].tasks){
+        // console.log("returned tasks:",sectionArray[section].tasks[task])
+        const taskRef = doc(db, "tasks", sectionArray[section].tasks[task])
+        const taskSnap = await getDoc(taskRef)
+
+        if (taskSnap.exists()){
+          console.log("task data:", taskSnap.data())
+          setTaskArray(current =>  ({...current, [taskSnap.id]: taskSnap.data()}))
+        } else {
+          console.log("No such task!")
+        }
+      }
+    }
+  }
 
   const handleOpenAddSection = () => {
     setSectionAdd(true);
   };
+
+  const completeTask = () => {
+    toast({
+      // title: "Account created.",
+      // description: "We've created your account for you.",
+      status: "success",
+      duration: 7000,
+      isClosable: true,
+      render: () => (
+        <Flex
+          borderRadius="lg"
+          alignItems="center"
+          flexDir="row"
+          backgroundColor="brand.100"
+        >
+          <Text ml="2" color="gray.100">
+            Task completed
+          </Text>
+          <Spacer />
+          <Button
+            textColor="gray.100"
+            _hover={{ backgroundColor: "brand.100" }}
+            p={3}
+            bg="brand.100"
+          >
+            Undo
+          </Button>
+        </Flex>
+      ),
+    });
+  };
+
   return (
     <Flex
       height={"100vh"}
@@ -69,7 +156,7 @@ querySnapshot.forEach((doc) => {
       <Flex className="projectContent" flexDir={"column"} w="55vw">
         <Flex className="ProjectHeader" alignItems={"center"}>
           <Text className="ProjectName" fontSize={"larger"} fontWeight={"bold"}>
-            {projectName}
+            {project.projectName}
             {/* {router.pathname}
             Education */}
           </Text>
@@ -99,7 +186,8 @@ querySnapshot.forEach((doc) => {
         </Flex>
         <Flex className="projectBody" mr={10} mt={10}>
           <Flex className="sections" flexDir={"column"} gap={4}>
-            <Flex className="sectionContent" flexDir={"column"} w={278} p={1}>
+            {
+              <Flex className="sectionContent" flexDir={"column"} w={278} p={1}>
               <Flex
                 className="sectionHeader"
                 flexGrow={1}
@@ -140,6 +228,7 @@ querySnapshot.forEach((doc) => {
                 <TaskModalButton />
               </Flex>
             </Flex>
+            }
             <Flex className="sectionContent" flexDir={"column"} w={278} p={1}>
               <Flex
                 className="sectionHeader"
