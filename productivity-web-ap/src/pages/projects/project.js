@@ -10,6 +10,9 @@ import {
 import React, { useState, useEffect } from "react";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
+import { IoIosRadioButtonOff } from "react-icons/io";
+import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineDelete } from "react-icons/ai";
 import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
 import SectionModalIcon from "@/components/Modal/Section/SectionModalIcon";
 import { BsMessenger } from "react-icons/bs";
@@ -17,7 +20,12 @@ import { useRouter } from "next/router";
 import { FiPlusSquare } from "react-icons/fi";
 import {
   doc,
-  getDoc,collection, query, where, getDocs
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  Timestamp
 } from "firebase/firestore";
 import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
@@ -40,7 +48,7 @@ const Project = () => {
   const [projectId, setProjectId] = useState("weMmrFmJulqnB8uQ8qwv"); // Id needs to be dynamically added later
   const [project, setProject] = useState("");
   const [sectionArray, setSectionArray] = useState({});
-  const [taskArray, setTaskArray] = useState({})
+  const [taskArray, setTaskArray] = useState({});
   const [sectionAdd, setSectionAdd] = useState(false);
   const [user] = useAuthState(auth);
   const handleChat = () => {
@@ -74,28 +82,29 @@ const Project = () => {
 
   useEffect(() => {
     // useEffect to get the tasks of the sections on when section array is updated
-    if(!sectionArray) return;
+    if (!sectionArray) return;
     getTask();
-  }, [sectionArray])
+  }, [sectionArray]);
 
   const getProject = async () => {
     const projectRef = doc(db, "projects", projectId);
-    const projectSnap = await getDoc(projectRef)
+    const projectSnap = await getDoc(projectRef);
     setProject(projectSnap.data());
     console.log("Document data:", project);
-    console.log("Document Id:", projectSnap.id)
+    console.log("Document Id:", projectSnap.id);
   };
 
   const getSection = async () => {
-
     // gets all the sections from project and stores them in an array like a dictionary where key = sectionId and value is the sectionObject
     project.sections.map(async (section) => {
       const secRef = doc(db, "sections", section);
       const secSnap = await getDoc(secRef);
       if (secSnap.exists()) {
         console.log("section data:", secSnap.data());
-        setSectionArray(current => ({...current, [secSnap.id]: secSnap.data()}))
-        
+        setSectionArray((current) => ({
+          ...current,
+          [secSnap.id]: secSnap.data(),
+        }));
       } else {
         // docSnap.data() will be undefined in this case
         console.log("No such section!");
@@ -104,23 +113,26 @@ const Project = () => {
   };
 
   const getTask = async () => {
-    console.log(sectionArray)
+    console.log(sectionArray);
     for (var section in sectionArray) {
-      console.log(section+ " : " +sectionArray[section].tasks)
-      for (var task in sectionArray[section].tasks){
+      console.log(section + " : " + sectionArray[section].tasks);
+      for (var task in sectionArray[section].tasks) {
         // console.log("returned tasks:",sectionArray[section].tasks[task])
-        const taskRef = doc(db, "tasks", sectionArray[section].tasks[task])
-        const taskSnap = await getDoc(taskRef)
+        const taskRef = doc(db, "tasks", sectionArray[section].tasks[task]);
+        const taskSnap = await getDoc(taskRef);
 
-        if (taskSnap.exists()){
-          console.log("task data:", taskSnap.data())
-          setTaskArray(current =>  ({...current, [taskSnap.id]: taskSnap.data()}))
+        if (taskSnap.exists()) {
+          console.log("task data:", taskSnap.data());
+          setTaskArray((current) => ({
+            ...current,
+            [taskSnap.id]: taskSnap.data(),
+          }));
         } else {
-          console.log("No such task!")
+          console.log("No such task!");
         }
       }
     }
-  }
+  };
 
   const handleOpenAddSection = () => {
     setSectionAdd(true);
@@ -159,8 +171,6 @@ const Project = () => {
 
   return (
     <Flex
-      height={"100vh"}
-      maxWidth={"2000px"}
       flexDir={"column"}
       pt={10}
       pl={20}
@@ -200,77 +210,140 @@ const Project = () => {
         </Flex>
         <Flex className="projectBody" mr={10} mt={10}>
           <Flex className="sections" flexDir={"column"} gap={4}>
-            {
-              <Flex className="sectionContent" flexDir={"column"} w={278} p={1}>
-              <Flex
-                className="sectionHeader"
-                flexGrow={1}
-                alignItems={"center"}
-              >
-                <Text
-                  className={"sectionTitle"}
-                  fontWeight={"bold"}
-                  fontSize={"sm"}
+            {Object.keys(sectionArray).map((sectionId, index) => {
+              return (
+                <Flex
+                  className="sectionContent"
+                  key={index}
+                  flexDir={"column"}
+                  // w={278}
+                  flexGrow
+                  p={1}
                 >
-                  Section
-                </Text>
-                <Text
-                  className="sectionTaskCount"
-                  pl={2}
-                  color={"gray.400"}
-                  fontSize={"sm"}
-                >
-                  3
-                </Text>
-                <Spacer />
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    rightIcon={
-                      <Icon as={SlOptions} fontSize="18" color={"gray.500"} />
-                    }
-                  />
-                  <MenuList>
-                    <MenuItem>Edit Name</MenuItem>
-                    <MenuItem>Share</MenuItem>
-                    <MenuItem>Add Section</MenuItem>
-                    <MenuItem textColor={"red"}>Delete</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Flex>
-              <Flex className="sectionBody">
-                <TaskModalButton />
-              </Flex>
-            </Flex>
-            }
-            <Flex className="sectionContent" flexDir={"column"} w={278} p={1}>
-              <Flex
-                className="sectionHeader"
-                flexGrow={1}
-                alignItems={"center"}
-              >
-                <Text
-                  className={"sectionTitle"}
-                  fontWeight={"bold"}
-                  fontSize={"sm"}
-                >
-                  Section
-                </Text>
-                <Text
-                  className="sectionTaskCount"
-                  pl={2}
-                  color={"gray.400"}
-                  fontSize={"sm"}
-                >
-                  3
-                </Text>
-                <Spacer />
-                <Icon as={SlOptions} fontSize="18" color={"gray.500"} />
-              </Flex>
-              <Flex className="sectionBody">
-                <TaskModalButton />
-              </Flex>
-            </Flex>
+                  <Flex
+                    className="sectionHeader"
+                    flexGrow={1}
+                    alignItems={"center"}
+                  >
+                    <Text
+                      className={"sectionTitle"}
+                      fontWeight={"bold"}
+                      fontSize={"sm"}
+                    >
+                      {sectionArray[sectionId].sectionName}
+                    </Text>
+                    <Text
+                      className="sectionTaskCount"
+                      pl={2}
+                      color={"gray.400"}
+                      fontSize={"sm"}
+                    >
+                      {sectionArray[sectionId].tasks.length}
+                    </Text>
+                    <Spacer />
+                    <Menu>
+                      <MenuButton
+                        as={Button}
+                        rightIcon={
+                          <Icon
+                            as={SlOptions}
+                            fontSize="18"
+                            color={"gray.500"}
+                          />
+                        }
+                      />
+                      <MenuList>
+                        <MenuItem>Edit Name</MenuItem>
+                        <MenuItem>Share</MenuItem>
+                        <MenuItem>Add Section</MenuItem>
+                        <MenuItem textColor={"red"}>Delete</MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                  <Flex className="sectionBody" flexDir={"column"} gap={4}>
+                    {sectionArray[sectionId].tasks.map((task) => {
+                      return (
+                        <>
+                          {Object.keys(taskArray).map((taskId, index) => {
+                            if(taskId === task){
+
+                              const dueDateStamp = new Timestamp(
+                                taskArray[taskId].dueDate.seconds,
+                                taskArray[taskId].dueDate.nanoseconds
+                              );
+              
+                              const createdStamp = new Timestamp(
+                                taskArray[taskId].createdAt.seconds,
+                                taskArray[taskId].createdAt.nanoseconds
+                              );
+
+                              return (
+                              <Flex flexDir={"row"} key={index}>
+                                <Flex flexDir={"row"} gap="2" flexGrow={1}>
+                                  <Flex>
+                                    <Icon
+                                      as={IoIosRadioButtonOff}
+                                      fontSize="22"
+                                      color={taskArray[taskId].priority}
+                                      paddingTop="1"
+                                      cursor="pointer"
+                                      onClick={completeTask}
+                                    />
+                                  </Flex>
+
+                                  <Flex flexDir={"column"}>
+                                    {/* task1 */}
+
+                                    <Flex
+                                      flexDir={"column"}
+                                      key={taskId}
+                                      // hidden={task.priority != "red.500" ? true : false}
+                                    >
+                                      <Text fontWeight={"bold"}>{taskArray[taskId].taskName}</Text>
+                                      <Text fontWeight={"semibold"}>{taskArray[taskId].desc}</Text>
+                                      <Text fontSize="xs">
+                                        {" "}
+                                        Due date:
+                                        {dueDateStamp.toDate().toLocaleString()}
+                                      </Text>
+                                      <Text fontSize="xs">
+                                        {" "}
+                                        Created:
+                                        {createdStamp.toDate().toLocaleString()}
+                                      </Text>
+                                    </Flex>
+                                  </Flex>
+                                </Flex>
+
+                                {/* edit,delete section */}
+                                <Flex ml={20} gap="2">
+                                  <Icon
+                                    as={AiOutlineEdit}
+                                    fontSize="18"
+                                    color={"gray.500"}
+                                    cursor="pointer"
+                                  />
+                                  <Icon
+                                    as={AiOutlineDelete}
+                                    fontSize="18"
+                                    color={"gray.500"}
+                                    cursor="pointer"
+                                  />
+                                </Flex>
+                              </Flex>
+                            );
+                            }
+                            
+                          })}
+                        </>
+                      );
+                    })}
+                    <TaskModalButton />
+                  </Flex>
+                </Flex>
+              );
+            })}
+
             {sectionAdd ? <div></div> : <SectionModalIcon />}
           </Flex>
         </Flex>
