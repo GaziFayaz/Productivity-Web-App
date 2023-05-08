@@ -12,12 +12,14 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
 import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
 import SectionModalIcon from "@/components/Modal/Section/SectionModalIcon";
+import { BsMessenger } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { FiPlusSquare } from "react-icons/fi";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { auth, firestore } from "@/firebase/clientApp";
+import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import axios from "axios";
 
 import {
   Menu,
@@ -32,26 +34,41 @@ import {
 
 const Project = () => {
   const router = useRouter();
-  const [projectName, setProjectName] = useState("")
+  const [projectName, setProjectName] = useState("");
   const [sectionAdd, setSectionAdd] = useState(false);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData =async () => {
-
-    const q = query(collection(firestore, "projects"));
-
-const querySnapshot = await getDocs(q);
-querySnapshot.forEach((doc) => {
-  // doc.data() is never undefined for query doc snapshots
-  console.log(doc.id, " => ", doc.data());
-  setProjectName(doc.data().projectName)
-  forEach
-});
-    return () => {};
+  const [user] = useAuthState(auth);
+  const handleChat = () => {
+    // console.log(user?.uid, user?.displayName);
+    axios
+      .put(
+        "https://api.chatengine.io/users/",
+        {
+          username: user?.displayName || user.email?.split("@")[0],
+          secret: user?.uid,
+        },
+        {
+          headers: { "Private-key": "25c27a98-f5d8-4114-a63f-30d13a318d15" },
+        }
+      )
+      .then((r) => router.push("/Chats/chats"));
   };
+
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
+  // const getData = async () => {
+  //   const q = query(collection(db, "projects"));
+
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     // doc.data() is never undefined for query doc snapshots
+  //     console.log(doc.id, " => ", doc.data());
+  //     setProjectName(doc.data().projectName);
+  //     forEach;
+  //   });
+  //   return () => {};
+  // };
 
   const handleOpenAddSection = () => {
     setSectionAdd(true);
@@ -171,6 +188,18 @@ querySnapshot.forEach((doc) => {
             {sectionAdd ? <div></div> : <SectionModalIcon />}
           </Flex>
         </Flex>
+      </Flex>
+      <Flex>
+        <Icon
+          as={BsMessenger}
+          alt="Chat with project teammates"
+          cursor={"pointer"}
+          position="fixed"
+          bottom={4}
+          right={0}
+          boxSize={10}
+          onClick={handleChat}
+        />
       </Flex>
     </Flex>
   );

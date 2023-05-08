@@ -54,7 +54,7 @@ const TaskModalIcon: React.FC = () => {
     setLoading(true);
     try {
       // Create the task document in firestore
-      // const taskDocRef= firestore.collection("tasks").doc();
+      // const taskDocRef= .collection("tasks").doc();
 
       const data = {
         creatorId: user?.uid,
@@ -81,15 +81,18 @@ const TaskModalIcon: React.FC = () => {
 
   return (
     <>
-      <Flex  height={8} width={8} alignItems={"center"} justifyContent={"center"}
-      color="white" borderRadius={"sm"} _hover={{backgroundColor:"rgba(255, 255, 255, 0.2)"}}>
-        <AddIcon
-          cursor="pointer"
-          onClick={onOpen}
-        />
+      <Flex
+        height={8}
+        width={8}
+        alignItems={"center"}
+        justifyContent={"center"}
+        color="white"
+        borderRadius={"sm"}
+        _hover={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+      >
+        <AddIcon cursor="pointer" onClick={onOpen} />
       </Flex>
 
-      
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
