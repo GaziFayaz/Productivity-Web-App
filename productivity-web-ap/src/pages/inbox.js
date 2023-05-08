@@ -32,14 +32,9 @@ export default function Inbox() {
   const dbInstance = collection(db, "tasks");
   const toast = useToast();
   const today = new Date();
-  console.log(JSON.stringify(today.getDate() - 1));
   useEffect(() => {
     getTasks();
   }, []);
-
-  const sendNotif = async () => {
-    await sendNotification("hewllo");
-  };
 
   const getTasks = () => {
     getDocs(dbInstance).then((data) => {
@@ -118,10 +113,6 @@ export default function Inbox() {
                     key={task.id}
                     hidden={task.priority != "red.500" ? true : false}
                   >
-                    {/* {JSON.stringify(today.getDate()) ===
-                    dueDateStamp.toDate().getDate() - 1
-                      ? sendNotif()
-                      : ""} */}
                     {/* Task section */}
                     <Flex flexDir={"row"} gap="2" flexGrow={1}>
                       <Flex>
