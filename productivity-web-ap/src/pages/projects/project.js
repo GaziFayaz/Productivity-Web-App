@@ -12,19 +12,17 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
 import TaskModalButton from "@/components/Modal/Task/TaskModalButton";
 import SectionModalIcon from "@/components/Modal/Section/SectionModalIcon";
+import { BsMessenger } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { FiPlusSquare } from "react-icons/fi";
 import {
   doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
+  getDoc,collection, query, where, getDocs
 } from "firebase/firestore";
 import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import axios from "axios";
 
 import {
   Menu,
@@ -44,6 +42,22 @@ const Project = () => {
   const [sectionArray, setSectionArray] = useState({});
   const [taskArray, setTaskArray] = useState({})
   const [sectionAdd, setSectionAdd] = useState(false);
+  const [user] = useAuthState(auth);
+  const handleChat = () => {
+    // console.log(user?.uid, user?.displayName);
+    axios
+      .put(
+        "https://api.chatengine.io/users/",
+        {
+          username: user?.displayName || user.email?.split("@")[0],
+          secret: user?.uid,
+        },
+        {
+          headers: { "Private-key": "25c27a98-f5d8-4114-a63f-30d13a318d15" },
+        }
+      )
+      .then((r) => router.push("/Chats/chats"));
+  };
 
   useEffect(() => {
     // useEffect to get the project data and have it in project state
@@ -260,6 +274,18 @@ const Project = () => {
             {sectionAdd ? <div></div> : <SectionModalIcon />}
           </Flex>
         </Flex>
+      </Flex>
+      <Flex>
+        <Icon
+          as={BsMessenger}
+          alt="Chat with project teammates"
+          cursor={"pointer"}
+          position="fixed"
+          bottom={4}
+          right={0}
+          boxSize={10}
+          onClick={handleChat}
+        />
       </Flex>
     </Flex>
   );

@@ -19,6 +19,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Sidebar/Sidebar.js", "src/pages/inbox.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components/Sidebar/Sidebar.js", "src/pages/inbox.js", "src/pages/api/notification.js"],
   "exclude": ["node_modules"]
 }

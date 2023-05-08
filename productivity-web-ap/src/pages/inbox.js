@@ -22,6 +22,7 @@ import { collection, getDocs, doc } from "firebase/firestore";
 import { db } from "@/firebase/clientApp";
 import * as firestore from "firebase/firestore";
 import safeJsonStringify from "safe-json-stringify";
+import { sendNotification } from "lib/sendNotifApi";
 
 export default function Inbox() {
   // const [taskComplete, setTaskComplete] = useState(false);
@@ -30,8 +31,7 @@ export default function Inbox() {
   const [tasksArray, setTasksArray] = useState([]);
   const dbInstance = collection(db, "tasks");
   const toast = useToast();
-  const taskFlag = [];
-
+  const today = new Date();
   useEffect(() => {
     getTasks();
   }, []);
@@ -97,15 +97,16 @@ export default function Inbox() {
               </Text>
 
               {tasksArray.map((task) => {
-                const timestamp1 = new firestore.Timestamp(
+                const dueDateStamp = new firestore.Timestamp(
                   task.dueDate.seconds,
                   task.dueDate.nanoseconds
                 );
 
-                const timestamp2 = new firestore.Timestamp(
+                const createdStamp = new firestore.Timestamp(
                   task.createdAt.seconds,
                   task.createdAt.nanoseconds
                 );
+                // console.log("date" + safeJsonStringify(dueDateStamp.toDate().getDate() - 1));
                 return (
                   <Flex
                     flexDir={"row"}
@@ -130,7 +131,7 @@ export default function Inbox() {
 
                         <Flex
                           flexDir={"column"}
-                          key={task.creatorId}
+                          key={task.id}
                           // hidden={task.priority != "red.500" ? true : false}
                         >
                           <Text>{task.taskName}</Text>
@@ -138,12 +139,12 @@ export default function Inbox() {
                           <Text fontSize="xs">
                             {" "}
                             Due date:
-                            {timestamp1.toDate().toLocaleString()}
+                            {dueDateStamp.toDate().toDateString()}
                           </Text>
                           <Text fontSize="xs">
                             {" "}
                             Created:
-                            {timestamp2.toDate().toLocaleString()}
+                            {createdStamp.toDate().toDateString()}
                           </Text>
                         </Flex>
                       </Flex>
@@ -182,12 +183,12 @@ export default function Inbox() {
               </Text>
               {/* Task section */}
               {tasksArray.map((task) => {
-                const timestamp1 = new firestore.Timestamp(
+                const dueDateStamp = new firestore.Timestamp(
                   task.dueDate.seconds,
                   task.dueDate.nanoseconds
                 );
 
-                const timestamp2 = new firestore.Timestamp(
+                const createdStamp = new firestore.Timestamp(
                   task.createdAt.seconds,
                   task.createdAt.nanoseconds
                 );
@@ -222,12 +223,12 @@ export default function Inbox() {
                           <Text fontSize="xs">
                             {" "}
                             Due date:
-                            {timestamp1.toDate().toLocaleString()}
+                            {dueDateStamp.toDate().toDateString()}
                           </Text>
                           <Text fontSize="xs">
                             {" "}
                             Created:
-                            {timestamp2.toDate().toLocaleString()}
+                            {createdStamp.toDate().toLocaleString()}
                           </Text>
                         </Flex>
                       </Flex>
@@ -260,12 +261,12 @@ export default function Inbox() {
               </Text>
 
               {tasksArray.map((task) => {
-                const timestamp1 = new firestore.Timestamp(
+                const dueDateStamp = new firestore.Timestamp(
                   task.dueDate.seconds,
                   task.dueDate.nanoseconds
                 );
 
-                const timestamp2 = new firestore.Timestamp(
+                const createdStamp = new firestore.Timestamp(
                   task.createdAt.seconds,
                   task.createdAt.nanoseconds
                 );
@@ -300,12 +301,12 @@ export default function Inbox() {
                           <Text fontSize="xs">
                             {" "}
                             Due date:
-                            {timestamp1.toDate().toLocaleString()}
+                            {dueDateStamp.toDate().toLocaleString()}
                           </Text>
                           <Text fontSize="xs">
                             {" "}
                             Created:
-                            {timestamp2.toDate().toLocaleString()}
+                            {createdStamp.toDate().toLocaleString()}
                           </Text>
                         </Flex>
                       </Flex>
@@ -338,12 +339,12 @@ export default function Inbox() {
               </Text>
 
               {tasksArray.map((task) => {
-                const timestamp1 = new firestore.Timestamp(
+                const dueDateStamp = new firestore.Timestamp(
                   task.dueDate.seconds,
                   task.dueDate.nanoseconds
                 );
 
-                const timestamp2 = new firestore.Timestamp(
+                const createdStamp = new firestore.Timestamp(
                   task.createdAt.seconds,
                   task.createdAt.nanoseconds
                 );
@@ -378,12 +379,12 @@ export default function Inbox() {
                           <Text fontSize="xs">
                             {" "}
                             Due date:
-                            {timestamp1.toDate().toLocaleString()}
+                            {dueDateStamp.toDate().toLocaleString()}
                           </Text>
                           <Text fontSize="xs">
                             {" "}
                             Created:
-                            {timestamp2.toDate().toLocaleString()}
+                            {createdStamp.toDate().toLocaleString()}
                           </Text>
                         </Flex>
                       </Flex>
