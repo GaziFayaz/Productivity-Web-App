@@ -22,7 +22,6 @@ import { collection, getDocs, doc } from "firebase/firestore";
 import { db } from "@/firebase/clientApp";
 import * as firestore from "firebase/firestore";
 import safeJsonStringify from "safe-json-stringify";
-import { sendNotification } from "lib/sendNotifApi";
 
 export default function Inbox() {
   // const [taskComplete, setTaskComplete] = useState(false);
