@@ -67,14 +67,15 @@ const SectionModalIcon: React.FC = () => {
         className="AddSection"
         flexDir={"row"}
         gap={1}
+        justifyContent={"center"}
         fontWeight={"medium"}
         color={"gray.500"}
         _hover={{ color: "brand.100" }}
         fontSize={14}
         onClick={onOpen}
       >
-        <Icon as={FiPlusSquare} fontSize={20} />
-        <Text width={"24"} fontWeight={"medium"}>
+        <Icon as={FiPlusSquare} fontSize={20} color={"brand.100"} />
+        <Text  fontWeight={"medium"}>
           Add section
         </Text>
       </Flex>
