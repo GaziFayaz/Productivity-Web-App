@@ -87,11 +87,14 @@ const Project = () => {
   }, [sectionArray]);
 
   const getProject = async () => {
+    // gets the project from db and stores the object in state
     const projectRef = doc(db, "projects", projectId);
+    // console.log("Project Reference : ",projectRef)
+    // console.log("trail : ", projectRef.id)
     const projectSnap = await getDoc(projectRef);
     setProject(projectSnap.data());
-    console.log("Document data:", project);
-    console.log("Document Id:", projectSnap.id);
+    // console.log("Document data:", project);
+    // console.log("Document Id:", projectSnap.id);
   };
 
   const getSection = async () => {
@@ -100,7 +103,7 @@ const Project = () => {
       const secRef = doc(db, "sections", section);
       const secSnap = await getDoc(secRef);
       if (secSnap.exists()) {
-        console.log("section data:", secSnap.data());
+        // console.log("section data:", secSnap.data());
         setSectionArray((current) => ({
           ...current,
           [secSnap.id]: secSnap.data(),
@@ -115,14 +118,14 @@ const Project = () => {
   const getTask = async () => {
     console.log(sectionArray);
     for (var section in sectionArray) {
-      console.log(section + " : " + sectionArray[section].tasks);
+      // console.log(section + " : " + sectionArray[section].tasks);
       for (var task in sectionArray[section].tasks) {
         // console.log("returned tasks:",sectionArray[section].tasks[task])
         const taskRef = doc(db, "tasks", sectionArray[section].tasks[task]);
         const taskSnap = await getDoc(taskRef);
 
         if (taskSnap.exists()) {
-          console.log("task data:", taskSnap.data());
+          // console.log("task data:", taskSnap.data());
           setTaskArray((current) => ({
             ...current,
             [taskSnap.id]: taskSnap.data(),
@@ -338,7 +341,7 @@ const Project = () => {
                         </>
                       );
                     })}
-                    <TaskModalButton />
+                    <TaskModalButton sectionId={sectionId} />
                   </Flex>
                 </Flex>
               );
