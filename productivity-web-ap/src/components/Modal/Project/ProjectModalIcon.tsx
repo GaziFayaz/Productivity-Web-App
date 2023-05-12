@@ -18,9 +18,9 @@ import {
   ModalOverlay,
   Spacer,
   Text,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiCircle } from "react-icons/fi";
@@ -37,7 +37,7 @@ const ProjectModalIcon: React.FC = () => {
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
   };
-  
+
   const handleChangeColor = (event: any) => {
     if (event.target.value) {
       console.log(event.target.value);
@@ -51,30 +51,36 @@ const ProjectModalIcon: React.FC = () => {
   const handleCreateProject = async () => {
     // ** implement error handling later **
     if (error) setError("");
-    setLoading(true);
+    if (user) {
+      setLoading(true);
 
-    try {
-      // Create the Project document in firestore
+      try {
+        // Create the Project document in firestore
 
-      const data = {
-        creatorId: user?.uid,
-        createdAt: serverTimestamp(),
-        projectName: projectName,
-        color: color,
-        colorValue: colorValue,
-        numberOfMembers: 1,
-        members: [user?.uid],
-        numberOfSections: 0,
-        sections: [],
-      };
-      const projectDocRef = doc(collection(db, "projects"));
-      await setDoc(projectDocRef, data);
-      onClose();
-    } catch (error: any) {
-      console.log("handleCreateProject error", error);
-      setError(error.message);
+        const data = {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          projectName: projectName,
+          color: color,
+          colorValue: colorValue,
+          numberOfMembers: 1,
+          members: [user?.uid],
+          numberOfSections: 0,
+          sections: [],
+        };
+        const projectDocRef = doc(collection(db, "projects"));
+        await setDoc(projectDocRef, data)
+        const userDocRef = doc(db, "users", user.uid);
+        await updateDoc(userDocRef, {
+          projects: arrayUnion(projectDocRef.id)
+        })
+        onClose();
+      } catch (error: any) {
+        console.log("handleCreateProject error", error);
+        setError(error.message);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
