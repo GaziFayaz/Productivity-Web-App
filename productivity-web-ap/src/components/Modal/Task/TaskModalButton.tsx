@@ -42,9 +42,9 @@ import Router from "next/router";
 const TaskModalButton: React.FC = (props: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
-  const [taskName, setTaskName] = useState("Dummy");
-  const [desc, setDesc] = useState("This is a dummy description");
-  const [dueDate, setDueDate] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [desc, setDesc] = useState("");
+  const [dueDate, setDueDate] = useState(new Date());
   const [priority, setPriority] = useState("1");
   const [label, setLabel] = useState("read");
   const [error, setError] = useState("");
