@@ -6,8 +6,67 @@ import { FiCircle } from "react-icons/fi";
 import { RiInboxFill, RiCalendar2Line } from "react-icons/ri";
 import { MdAssignment, MdCalendarToday } from "react-icons/md";
 import ProjectModalIcon from "../Modal/Project/ProjectModalIcon";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "@/firebase/clientApp";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+  Transaction,
+  updateDoc,
+  getDoc,
+} from "firebase/firestore";
+import { get } from "http";
+import { Router } from "next/router";
 
-function Sidebar() {
+const Sidebar = () => {
+  const [user] = useAuthState(auth);
+  const [userProjects, setUserProjects] = useState([]);
+  const [projectsArray, setProjectsArray] = useState({});
+
+  useEffect(() => {
+    getUserProjects();
+  }, [user]);
+
+  useEffect(() => {
+    getProjects();
+    console.log("copying porject", projectsArray);
+  }, [userProjects]);
+
+  const getUserProjects = async () => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        console.log(userSnap.data().projects);
+        setUserProjects(userSnap.data().projects);
+      }
+    }
+  };
+
+  const getProjects = () => {
+    Object.keys(userProjects).map(async (projectId, index) => {
+      // console.log("ProjectID: ", userProjects[projectId])
+      // console.log("index: ", index)
+      const projectRef = doc(db, "projects", userProjects[projectId]);
+      const projectSnap = await getDoc(projectRef);
+      if (projectSnap.exists()) {
+        setProjectsArray((current) => ({
+          ...current,
+          [projectSnap.id]: projectSnap.data(),
+        }));
+      }
+    });
+  };
+
+  const refresh = () => {
+    Router.reload()
+  }
+
   return (
     <Flex
       w={"20%"}
@@ -53,36 +112,34 @@ function Sidebar() {
         </Flex>
 
         {/* personal projects */}
-        <Flex className="projects" paddingTop="10">
-          <Link href="" _hover={{ textDecor: "none" }}>
-            <Text fontSize="md">Projects</Text>
-          </Link>
+
+        <Flex className="projects" paddingTop="10" alignItems={"center"}>
+          <Text fontSize="md">Projects</Text>
           <Spacer />
-          <Link href="">
-            <ProjectModalIcon />
-          </Link>
+          <ProjectModalIcon />
         </Flex>
         <Flex flexDir={"column"} pt={2} pl={2}>
-          <Link href={"/projects/project"}>
-            <Flex justifyContent={"left"} alignItems={"center"}>
-              <FiCircle className="projectColor" fill="#AAAAAA" color="white" />
-              <Text className="projectName" pl={2}>
-                Education
-              </Text>
-              <Spacer />
-              <Text
-                className="projectTaskCount"
-                color={"gray.400"}
-                fontSize={"sm"}
-              >
-                3
-              </Text>
-            </Flex>
-          </Link>
+          {Object.keys(projectsArray).map((projectId, index) => {
+            return (
+              <Link href={`/projects/${projectId}`} onClick = {refresh} >
+                <Flex key={index} justifyContent={"left"} alignItems={"center"}>
+                  <FiCircle
+                    className="projectColor"
+                    fill="#AAAAAA"
+                    color="white"
+                  />
+                  <Text className="projectName" pl={2}>
+                    {projectsArray[projectId].projectName}
+                  </Text>
+                  <Spacer />
+                </Flex>
+              </Link>
+            );
+          })}
         </Flex>
       </Flex>
     </Flex>
   );
-}
+};
 
 export default Sidebar;
