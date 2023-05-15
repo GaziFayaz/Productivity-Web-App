@@ -15,6 +15,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
   Spacer,
   Text,
@@ -94,11 +95,11 @@ const ProjectModalIcon: React.FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {/* <ModalHeader>Create your account</ModalHeader> */}
+          {/* <ModalHeader textAlign={"center"}>Create a New Project</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormLabel fontWeight={"bold"} fontSize={"x-large"} mb={5}>
-              Add Project
+              Create Project
             </FormLabel>
             <FormControl>
               <FormLabel>Name</FormLabel>
