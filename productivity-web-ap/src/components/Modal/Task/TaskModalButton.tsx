@@ -44,7 +44,7 @@ const TaskModalButton: React.FC = (props: any) => {
   const [user] = useAuthState(auth);
   const [taskName, setTaskName] = useState("Dummy");
   const [desc, setDesc] = useState("This is a dummy description");
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(new Date());
   const [priority, setPriority] = useState("1");
   const [label, setLabel] = useState("read");
   const [error, setError] = useState("");
@@ -173,7 +173,7 @@ const TaskModalButton: React.FC = (props: any) => {
                     fontWeight="semibold"
                     cursor={"pointer"}
                   >
-                    <Flex flexDir={"row"}>{dueDate.toLocaleString()}</Flex>
+                    <Flex flexDir={"row"}>{dueDate.toLocaleString()}sdasdasd</Flex>
                   </MenuButton>
 
                   <MenuList>
