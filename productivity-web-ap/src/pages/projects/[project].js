@@ -31,7 +31,9 @@ import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import axios from "axios";
-
+import EditProjectModalIcon from "../../components/Modal/Project/EditProjectModalIcon";
+import EditSectionModalIcon from "../../components/Modal/Section/EditSectionModalIcon";
+import EditTaskModalIcon from "../../components/Modal/Task/EditTaskModalIcon"
 import {
   Menu,
   MenuButton,
@@ -45,7 +47,7 @@ import {
 
 const Project = () => {
   const router = useRouter();
-  const projectId = router.query.project
+  const projectId = router.query.project;
   const [project, setProject] = useState("");
   const [sectionArray, setSectionArray] = useState({});
   const [taskArray, setTaskArray] = useState({});
@@ -68,9 +70,7 @@ const Project = () => {
   };
 
   useEffect(() => {
-      
-      console.log("Id from url: ", projectId)
-      getProject();
+    getProject();
   }, [projectId]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const Project = () => {
 
   const getProject = async () => {
     // gets the project from db and stores the object in state
-    
+
     const projectRef = doc(db, "projects", projectId);
     // console.log("Project Reference : ",projectRef)
     // console.log("trail : ", projectRef.id)
@@ -197,9 +197,10 @@ const Project = () => {
                 }
               />
               <MenuList>
-                <MenuItem>Edit Name</MenuItem>
+                <MenuItem>
+                  <EditProjectModalIcon />
+                </MenuItem>
                 <MenuItem>Share</MenuItem>
-                <MenuItem>Add Section</MenuItem>
                 <MenuItem textColor={"red"}>Delete</MenuItem>
               </MenuList>
             </Menu>
@@ -248,11 +249,14 @@ const Project = () => {
                             color={"gray.500"}
                           />
                         }
-                      />
+                      ></MenuButton>
                       <MenuList>
-                        <MenuItem>Edit Name</MenuItem>
-                        <MenuItem>Share</MenuItem>
-                        <MenuItem>Add Section</MenuItem>
+                        <MenuItem>
+                          <EditSectionModalIcon
+                            sectionId={sectionId}
+                            section={sectionArray[sectionId]}
+                          />
+                        </MenuItem>
                         <MenuItem textColor={"red"}>Delete</MenuItem>
                       </MenuList>
                     </Menu>
@@ -321,12 +325,7 @@ const Project = () => {
 
                                   {/* edit,delete section */}
                                   <Flex ml={20} gap="2">
-                                    <Icon
-                                      as={AiOutlineEdit}
-                                      fontSize="18"
-                                      color={"gray.500"}
-                                      cursor="pointer"
-                                    />
+                                    <EditTaskModalIcon taskId={taskId} task={taskArray[taskId]} />
                                     <Icon
                                       as={AiOutlineDelete}
                                       fontSize="18"
