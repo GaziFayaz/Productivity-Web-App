@@ -125,8 +125,9 @@ const Sidebar = () => {
                 <Flex key={index} justifyContent={"left"} alignItems={"center"}>
                   <FiCircle
                     className="projectColor"
-                    fill="#AAAAAA"
-                    color="white"
+                    fill={projectsArray[projectId].colorValue}
+                    color={projectsArray[projectId].colorValue}
+                    fontSize={10}
                   />
                   <Text className="projectName" pl={2}>
                     {projectsArray[projectId].projectName}
