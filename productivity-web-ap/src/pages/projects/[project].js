@@ -25,13 +25,15 @@ import {
   query,
   where,
   getDocs,
-  Timestamp
+  Timestamp,
 } from "firebase/firestore";
 import { auth, db } from "@/firebase/clientApp";
 import { User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import axios from "axios";
-
+import EditProjectModalIcon from "../../components/Modal/Project/EditProjectModalIcon";
+import EditSectionModalIcon from "../../components/Modal/Section/EditSectionModalIcon";
+import EditTaskModalIcon from "../../components/Modal/Task/EditTaskModalIcon"
 import {
   Menu,
   MenuButton,
@@ -45,7 +47,7 @@ import {
 
 const Project = () => {
   const router = useRouter();
-  const [projectId, setProjectId] = useState("weMmrFmJulqnB8uQ8qwv"); // Id needs to be dynamically added later
+  const projectId = router.query.project;
   const [project, setProject] = useState("");
   const [sectionArray, setSectionArray] = useState({});
   const [taskArray, setTaskArray] = useState({});
@@ -68,9 +70,8 @@ const Project = () => {
   };
 
   useEffect(() => {
-    // useEffect to get the project data and have it in project state
     getProject();
-  }, []);
+  }, [projectId]);
 
   useEffect(() => {
     // useEffect to get the sections of the project only when project state is assigned
@@ -88,6 +89,7 @@ const Project = () => {
 
   const getProject = async () => {
     // gets the project from db and stores the object in state
+
     const projectRef = doc(db, "projects", projectId);
     // console.log("Project Reference : ",projectRef)
     // console.log("trail : ", projectRef.id)
@@ -173,19 +175,11 @@ const Project = () => {
   };
 
   return (
-    <Flex
-      flexDir={"column"}
-      pt={10}
-      pl={20}
-      pr={20}
-      pb={10}
-    >
+    <Flex flexDir={"column"} pt={10} pl={20} pr={20} pb={10}>
       <Flex className="projectContent" flexDir={"column"} w="55vw">
         <Flex className="ProjectHeader" alignItems={"center"}>
-          <Text className="ProjectName" fontSize={"larger"} fontWeight={"bold"}>
+          <Text className="ProjectName" fontSize={"2xl"} fontWeight={"bold"}>
             {project.projectName}
-            {/* {router.pathname}
-            Education */}
           </Text>
           <Spacer />
           <HStack spacing="20px">
@@ -203,9 +197,10 @@ const Project = () => {
                 }
               />
               <MenuList>
-                <MenuItem>Edit Name</MenuItem>
+                <MenuItem>
+                  <EditProjectModalIcon />
+                </MenuItem>
                 <MenuItem>Share</MenuItem>
-                <MenuItem>Add Section</MenuItem>
                 <MenuItem textColor={"red"}>Delete</MenuItem>
               </MenuList>
             </Menu>
@@ -231,7 +226,7 @@ const Project = () => {
                     <Text
                       className={"sectionTitle"}
                       fontWeight={"bold"}
-                      fontSize={"sm"}
+                      fontSize={"lg"}
                     >
                       {sectionArray[sectionId].sectionName}
                     </Text>
@@ -254,11 +249,14 @@ const Project = () => {
                             color={"gray.500"}
                           />
                         }
-                      />
+                      ></MenuButton>
                       <MenuList>
-                        <MenuItem>Edit Name</MenuItem>
-                        <MenuItem>Share</MenuItem>
-                        <MenuItem>Add Section</MenuItem>
+                        <MenuItem>
+                          <EditSectionModalIcon
+                            sectionId={sectionId}
+                            section={sectionArray[sectionId]}
+                          />
+                        </MenuItem>
                         <MenuItem textColor={"red"}>Delete</MenuItem>
                       </MenuList>
                     </Menu>
@@ -268,75 +266,76 @@ const Project = () => {
                       return (
                         <>
                           {Object.keys(taskArray).map((taskId, index) => {
-                            if(taskId === task){
-
+                            if (taskId === task) {
                               const dueDateStamp = new Timestamp(
                                 taskArray[taskId].dueDate.seconds,
                                 taskArray[taskId].dueDate.nanoseconds
                               );
-              
+
                               const createdStamp = new Timestamp(
                                 taskArray[taskId].createdAt.seconds,
                                 taskArray[taskId].createdAt.nanoseconds
                               );
 
                               return (
-                              <Flex flexDir={"row"} key={index}>
-                                <Flex flexDir={"row"} gap="2" flexGrow={1}>
-                                  <Flex>
-                                    <Icon
-                                      as={IoIosRadioButtonOff}
-                                      fontSize="22"
-                                      color={taskArray[taskId].priority}
-                                      paddingTop="1"
-                                      cursor="pointer"
-                                      onClick={completeTask}
-                                    />
-                                  </Flex>
+                                <Flex flexDir={"row"} key={index}>
+                                  <Flex flexDir={"row"} gap="2" flexGrow={1}>
+                                    <Flex>
+                                      <Icon
+                                        as={IoIosRadioButtonOff}
+                                        fontSize="22"
+                                        color={taskArray[taskId].priority}
+                                        paddingTop="1"
+                                        cursor="pointer"
+                                        onClick={completeTask}
+                                      />
+                                    </Flex>
 
-                                  <Flex flexDir={"column"}>
-                                    {/* task1 */}
+                                    <Flex flexDir={"column"}>
+                                      {/* task1 */}
 
-                                    <Flex
-                                      flexDir={"column"}
-                                      key={taskId}
-                                      // hidden={task.priority != "red.500" ? true : false}
-                                    >
-                                      <Text fontWeight={"bold"}>{taskArray[taskId].taskName}</Text>
-                                      <Text fontWeight={"semibold"}>{taskArray[taskId].desc}</Text>
-                                      <Text fontSize="xs">
-                                        {" "}
-                                        Due date:
-                                        {dueDateStamp.toDate().toLocaleString()}
-                                      </Text>
-                                      <Text fontSize="xs">
-                                        {" "}
-                                        Created:
-                                        {createdStamp.toDate().toLocaleString()}
-                                      </Text>
+                                      <Flex
+                                        flexDir={"column"}
+                                        key={taskId}
+                                        // hidden={task.priority != "red.500" ? true : false}
+                                      >
+                                        <Text fontWeight={"bold"}>
+                                          {taskArray[taskId].taskName}
+                                        </Text>
+                                        <Text fontWeight={"semibold"}>
+                                          {taskArray[taskId].desc}
+                                        </Text>
+                                        <Text fontSize="xs">
+                                          {" "}
+                                          Due date:
+                                          {dueDateStamp
+                                            .toDate()
+                                            .toLocaleString()}
+                                        </Text>
+                                        <Text fontSize="xs">
+                                          {" "}
+                                          Created:
+                                          {createdStamp
+                                            .toDate()
+                                            .toLocaleString()}
+                                        </Text>
+                                      </Flex>
                                     </Flex>
                                   </Flex>
-                                </Flex>
 
-                                {/* edit,delete section */}
-                                <Flex ml={20} gap="2">
-                                  <Icon
-                                    as={AiOutlineEdit}
-                                    fontSize="18"
-                                    color={"gray.500"}
-                                    cursor="pointer"
-                                  />
-                                  <Icon
-                                    as={AiOutlineDelete}
-                                    fontSize="18"
-                                    color={"gray.500"}
-                                    cursor="pointer"
-                                  />
+                                  {/* edit,delete section */}
+                                  <Flex ml={20} gap="2">
+                                    <EditTaskModalIcon taskId={taskId} task={taskArray[taskId]} />
+                                    <Icon
+                                      as={AiOutlineDelete}
+                                      fontSize="18"
+                                      color={"gray.500"}
+                                      cursor="pointer"
+                                    />
+                                  </Flex>
                                 </Flex>
-                              </Flex>
-                            );
+                              );
                             }
-                            
                           })}
                         </>
                       );

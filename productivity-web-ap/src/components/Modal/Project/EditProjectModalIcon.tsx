@@ -5,6 +5,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Icon,
   Input,
   Menu,
   MenuButton,
@@ -21,12 +22,24 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { addDoc, arrayUnion, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiCircle } from "react-icons/fi";
+import { SlOptions } from "react-icons/sl";
 
-const ProjectModalIcon: React.FC = () => {
+const EditProjectModalIcon: React.FC = () => {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
   const [error, setError] = useState("");
@@ -34,6 +47,25 @@ const ProjectModalIcon: React.FC = () => {
   const [projectName, setProjectName] = useState("");
   const [color, setColor] = useState("Red");
   const [colorValue, setColorValue] = useState("#E53E3E");
+  const projectId = router.query.project
+
+  useEffect(() => {
+    getProject()
+  },[])
+
+  const getProject= async() => {
+    // gets the project from db and stores the object in state
+    
+    const projectRef = doc(db, "projects", projectId);
+    // console.log("Project Reference : ",projectRef)
+    // console.log("trail : ", projectRef.id)
+    const projectSnap = await getDoc(projectRef);
+    setProjectName(projectSnap.data()?.projectName);
+    setColor(projectSnap.data()?.color)
+    setColorValue(projectSnap.data()?.colorValue)
+    // console.log("Document data:", project);
+    // console.log("Document Id:", projectSnap.id);
+  }
 
   const handleChangeProject = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(event.target.value);
@@ -49,32 +81,21 @@ const ProjectModalIcon: React.FC = () => {
     }
   };
 
-  const handleCreateProject = async () => {
+  const handleUpdateProject = async () => {
     // ** implement error handling later **
     if (error) setError("");
     if (user) {
       setLoading(true);
 
       try {
-        // Create the Project document in firestore
-
-        const data = {
-          creatorId: user?.uid,
-          createdAt: serverTimestamp(),
-          projectName: projectName,
-          color: color,
-          colorValue: colorValue,
-          numberOfMembers: 1,
-          members: [user?.uid],
-          numberOfSections: 0,
-          sections: [],
-        };
-        const projectDocRef = doc(collection(db, "projects"));
-        await setDoc(projectDocRef, data)
-        const userDocRef = doc(db, "users", user.uid);
-        await updateDoc(userDocRef, {
-          projects: arrayUnion(projectDocRef.id)
-        })
+        // update the Project document in firestore
+        const projectDocRef = doc(db, "projects", projectId);
+        await updateDoc(projectDocRef, {
+            projectName: projectName,
+            color: color,
+            colorValue: colorValue
+        });
+        router.reload()
         onClose();
       } catch (error: any) {
         console.log("handleCreateProject error", error);
@@ -86,20 +107,23 @@ const ProjectModalIcon: React.FC = () => {
 
   return (
     <>
-      <AddIcon
+      <Text
         color={"gray.500"}
         cursor="pointer"
         _hover={{ color: "gray.800" }}
         onClick={onOpen}
-      />
+        width={"full"}
+      >
+        Edit
+      </Text>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {/* <ModalHeader textAlign={"center"}>Create a New Project</ModalHeader> */}
+          {/* <ModalHeader textAlign={"center"}>Edit Project</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormLabel fontWeight={"bold"} fontSize={"x-large"} mb={5}>
-              Create Project
+              Edit Project
             </FormLabel>
             <FormControl>
               <FormLabel>Name</FormLabel>
@@ -195,10 +219,10 @@ const ProjectModalIcon: React.FC = () => {
               <Button
                 colorScheme="blue"
                 mr={3}
-                onClick={handleCreateProject}
+                onClick={handleUpdateProject}
                 isLoading={loading}
               >
-                Add
+                Confirm
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </Flex>
@@ -208,4 +232,4 @@ const ProjectModalIcon: React.FC = () => {
     </>
   );
 };
-export default ProjectModalIcon;
+export default EditProjectModalIcon;
