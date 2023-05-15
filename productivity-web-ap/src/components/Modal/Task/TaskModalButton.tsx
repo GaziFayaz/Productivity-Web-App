@@ -12,6 +12,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
   Select,
   Spacer,
@@ -143,7 +144,7 @@ const TaskModalButton: React.FC = (props: any) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {/* <ModalHeader>Create your account</ModalHeader> */}
+          <ModalHeader textAlign={"center"}>Create a New Task</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
