@@ -19,6 +19,7 @@ import {
   MenuButton,
   MenuList,
   Select,
+  ModalHeader,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -110,7 +111,7 @@ const TaskModalIcon: React.FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {/* <ModalHeader>Create your account</ModalHeader> */}
+          <ModalHeader textAlign={"center"}>Create a New Task</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
