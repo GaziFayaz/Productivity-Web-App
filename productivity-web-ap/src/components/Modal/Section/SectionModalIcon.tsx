@@ -16,6 +16,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
   Spacer,
   Text,
@@ -82,11 +83,11 @@ const SectionModalIcon: React.FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          {/* <ModalHeader>Create your account</ModalHeader> */}
+          {/* <ModalHeader textAlign={"center"}>Create a New Section</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormLabel fontWeight={"bold"} fontSize={"x-large"} mb={5}>
-              Add Section
+              Create New Section
             </FormLabel>
             <FormControl>
               <FormLabel>Name</FormLabel>
