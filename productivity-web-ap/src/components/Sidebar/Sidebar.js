@@ -34,7 +34,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getProjects();
-    console.log("copying porject", projectsArray);
+    // console.log("copying porject", projectsArray);
   }, [userProjects]);
 
   const getUserProjects = async () => {
@@ -54,7 +54,7 @@ const Sidebar = () => {
       // console.log("index: ", index)
       const projectRef = doc(db, "projects", userProjects[projectId]);
       const projectSnap = await getDoc(projectRef);
-      if (projectSnap.exists()) {
+      if (projectSnap.exists() && projectSnap.data().projectName != "inbox") {
         setProjectsArray((current) => ({
           ...current,
           [projectSnap.id]: projectSnap.data(),
@@ -64,8 +64,8 @@ const Sidebar = () => {
   };
 
   const refresh = () => {
-    Router.reload()
-  }
+    Router.reload();
+  };
 
   return (
     <Flex
@@ -114,22 +114,24 @@ const Sidebar = () => {
         {/* personal projects */}
 
         <Flex className="projects" paddingTop="10" alignItems={"center"}>
-          <Text fontSize="md">Projects</Text>
+          <Text fontSize="md" fontWeight={"semibold"}>
+            Projects
+          </Text>
           <Spacer />
           <ProjectModalIcon />
         </Flex>
-        <Flex flexDir={"column"} pt={2} pl={2}>
+        <Flex flexDir={"column"} pt={2} pl={2} gap={2}>
           {Object.keys(projectsArray).map((projectId, index) => {
             return (
-              <Link href={`/projects/${projectId}`} onClick = {refresh} >
-                <Flex key={index} justifyContent={"left"} alignItems={"center"}>
+              <Link href={`/projects/${projectId}`} onClick={refresh}>
+                <Flex key={index} justifyContent={"left"} alignItems={"center"} gap={2}>
                   <FiCircle
                     className="projectColor"
                     fill={projectsArray[projectId].colorValue}
                     color={projectsArray[projectId].colorValue}
                     fontSize={10}
                   />
-                  <Text className="projectName" pl={2}>
+                  <Text className="projectName">
                     {projectsArray[projectId].projectName}
                   </Text>
                   <Spacer />
