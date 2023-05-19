@@ -30,6 +30,7 @@ import "react-clock/dist/Clock.css";
 import { auth, db } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
 import {
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
@@ -44,7 +45,7 @@ import { useRouter } from "next/router";
 import { AiOutlineEdit } from "react-icons/ai";
 
 const EditTaskModalIcon: React.FC = (task) => {
-    const router = useRouter();
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
   const [taskName, setTaskName] = useState("");
@@ -56,14 +57,17 @@ const EditTaskModalIcon: React.FC = (task) => {
   const [category, setCategory] = useState("Inbox");
 
   useEffect(() => {
-    const dueDateStamp = new Timestamp(task.task.dueDate.seconds, task.task.dueDate.nanoseconds)
-    console.log("TASK: ", dueDateStamp.toDate().toLocaleString())
-    setTaskName(task.task.taskName)
-    setDesc(task.task.desc)
-    setDueDate(dueDateStamp.toDate())
-    setPriority(task.task.priority)
-    setCategory(task.task.category)
-  },[])
+    const dueDateStamp = new Timestamp(
+      task.task.dueDate.seconds,
+      task.task.dueDate.nanoseconds
+    );
+    // console.log("TASK: ", dueDateStamp.toDate().toLocaleString());
+    setTaskName(task.task.taskName);
+    setDesc(task.task.desc);
+    setDueDate(dueDateStamp.toDate());
+    setPriority(task.task.priority);
+    setCategory(task.task.category);
+  }, []);
 
   const handleChangeTask = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -98,11 +102,11 @@ const EditTaskModalIcon: React.FC = (task) => {
         desc: desc,
         dueDate: dueDate,
         priority: priority,
-        category: category
+        category: category,
+      }).then(() => {
+        router.reload();
       });
-      router.reload();
       onClose();
-      
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);
