@@ -38,7 +38,7 @@ import {
   Transaction,
   updateDoc,
 } from "firebase/firestore";
-import Router from "next/router";
+import {useRouter} from "next/router";
 
 const TaskModalButton: React.FC = (props: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,11 +46,12 @@ const TaskModalButton: React.FC = (props: any) => {
   const [taskName, setTaskName] = useState("");
   const [desc, setDesc] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
-  const [priority, setPriority] = useState("1");
-  const [label, setLabel] = useState("read");
+  const [priority, setPriority] = useState("red.500");
+  // const [label, setLabel] = useState("read");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("Inbox");
+  // const [category, setCategory] = useState("Inbox");
+  const router = useRouter()
 
   const handleChangeTask = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -62,9 +63,9 @@ const TaskModalButton: React.FC = (props: any) => {
     setPriority(event.target.value);
     console.log(priority);
   };
-  const handleChangecategtory = (e: any) => {
-    setCategory(e.target.value);
-  };
+  // const handleChangecategtory = (e: any) => {
+  //   setCategory(e.target.value);
+  // };
 
   // const handleClose = () => {
   //   setModalState((prev) => ({
@@ -87,7 +88,7 @@ const TaskModalButton: React.FC = (props: any) => {
         desc: desc,
         dueDate: dueDate,
         priority: priority,
-        label: label,
+        // label: label,
         isAssigned: false,
         assignedTo: null,
         isInProject: false,
@@ -102,8 +103,8 @@ const TaskModalButton: React.FC = (props: any) => {
           tasks: arrayUnion(taskId),
         });
       }
+      router.reload();
       onClose();
-      Router.reload();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
       setError(error.message);
@@ -204,7 +205,7 @@ const TaskModalButton: React.FC = (props: any) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button size="xs">
+            {/* <Button size="xs">
               <Select
                 value={category}
                 onChange={handleChangecategtory}
@@ -215,7 +216,7 @@ const TaskModalButton: React.FC = (props: any) => {
                 <option value="Education">Education</option>
                 <option value="Home">Home</option>
               </Select>
-            </Button>
+            </Button> */}
             <Spacer />
             <Flex>
               <Button
