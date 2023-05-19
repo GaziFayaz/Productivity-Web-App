@@ -175,7 +175,7 @@ const TaskModalButton: React.FC = (props: any) => {
                     fontWeight="semibold"
                     cursor={"pointer"}
                   >
-                    <Flex flexDir={"row"}>{dueDate.toLocaleString()}</Flex>
+                    <Flex flexDir={"row"}>{dueDate.toLocaleString()}sdasdasd</Flex>
                   </MenuButton>
 
                   <MenuList>
