@@ -22,13 +22,16 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { arrayUnion, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiCircle, FiPlusSquare } from "react-icons/fi";
 
 const SectionModalIcon: React.FC = () => {
+  const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const projectId = router.query.project
   const [user] = useAuthState(auth);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,6 +58,11 @@ const SectionModalIcon: React.FC = () => {
       };
       const sectionDocRef = doc(collection(db, "sections"));
       await setDoc(sectionDocRef, data);
+      const projectDocRef = doc(db, "projects", projectId)
+      await updateDoc(projectDocRef, {
+        sections: arrayUnion(sectionDocRef.id),
+      })
+      router.reload()
       onClose()
     } catch (error: any) {
         console.log("handleCreateSection error", error)
@@ -73,6 +81,7 @@ const SectionModalIcon: React.FC = () => {
         color={"gray.500"}
         _hover={{ color: "brand.100" }}
         fontSize={14}
+        cursor={"pointer"}
         onClick={onOpen}
       >
         <Icon as={FiPlusSquare} fontSize={20} color={"brand.100"} />
