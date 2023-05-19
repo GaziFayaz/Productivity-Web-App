@@ -22,11 +22,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { addDoc, arrayUnion, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiCircle } from "react-icons/fi";
 
 const ProjectModalIcon: React.FC = () => {
+  const router = useRouter()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
   const [error, setError] = useState("");
@@ -75,6 +77,7 @@ const ProjectModalIcon: React.FC = () => {
         await updateDoc(userDocRef, {
           projects: arrayUnion(projectDocRef.id)
         })
+        router.reload()
         onClose();
       } catch (error: any) {
         console.log("handleCreateProject error", error);
