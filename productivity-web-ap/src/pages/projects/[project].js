@@ -34,6 +34,10 @@ import axios from "axios";
 import EditProjectModalIcon from "../../components/Modal/Project/EditProjectModalIcon";
 import EditSectionModalIcon from "../../components/Modal/Section/EditSectionModalIcon";
 import EditTaskModalIcon from "../../components/Modal/Task/EditTaskModalIcon";
+import DeleteTaskButton from "@/components/Modal/Task/DeleteTaskButton";
+import DeleteSectionButton from "@/components/Modal/Section/DeleteSectionButton";
+import DeleteProjectButton from "@/components/Modal/Project/DeleteProjectButton";
+import ShareProjectButton from "../../components/Modal/Project/ShareProjectButton";
 import {
   Menu,
   MenuButton,
@@ -91,10 +95,16 @@ const Project = () => {
     // gets the project from db and stores the object in state
 
     const projectRef = doc(db, "projects", projectId);
+    // if(!projectRef){
+    //   router.push("/inbox")
+    // }
     // console.log("Project Reference : ",projectRef)
     // console.log("trail : ", projectRef.id)
     const projectSnap = await getDoc(projectRef);
-    setProject(projectSnap.data());
+    console.log("projectSnap: ", projectSnap);
+    if (projectSnap.exists()) {
+      setProject(projectSnap.data());
+    } else router.push("/inbox");
     // console.log("Document data:", project);
     // console.log("Document Id:", projectSnap.id);
   };
@@ -133,7 +143,7 @@ const Project = () => {
             [taskSnap.id]: taskSnap.data(),
           }));
         } else {
-          console.log("No such task!");
+          console.log("No such task! ", taskSnap.id);
         }
       }
     }
@@ -183,12 +193,7 @@ const Project = () => {
           </Text>
           <Spacer />
           <HStack spacing="20px">
-            <Flex alignItems={"center"}>
-              <Icon as={AiOutlineUserAdd} fontSize="22" color={"gray.500"} />
-              <Text pl={0.5} fontSize={12} color={"gray.500"}>
-                Share
-              </Text>
-            </Flex>
+            <ShareProjectButton />
             <Menu>
               <MenuButton
                 as={Button}
@@ -200,8 +205,13 @@ const Project = () => {
                 <MenuItem>
                   <EditProjectModalIcon />
                 </MenuItem>
-                <MenuItem>Share</MenuItem>
-                <MenuItem textColor={"red"}>Delete</MenuItem>
+                <MenuItem textColor={"red"}>
+                  <DeleteProjectButton
+                    projectId={projectId}
+                    project={project}
+                    userId={user.uid}
+                  />
+                </MenuItem>
               </MenuList>
             </Menu>
           </HStack>
@@ -257,7 +267,13 @@ const Project = () => {
                             section={sectionArray[sectionId]}
                           />
                         </MenuItem>
-                        <MenuItem textColor={"red"}>Delete</MenuItem>
+                        <MenuItem>
+                          <DeleteSectionButton
+                            sectionId={sectionId}
+                            section={sectionArray[sectionId]}
+                            projectId={projectId}
+                          />
+                        </MenuItem>
                       </MenuList>
                     </Menu>
                   </Flex>
@@ -329,11 +345,9 @@ const Project = () => {
                                       taskId={taskId}
                                       task={taskArray[taskId]}
                                     />
-                                    <Icon
-                                      as={AiOutlineDelete}
-                                      fontSize="18"
-                                      color={"gray.500"}
-                                      cursor="pointer"
+                                    <DeleteTaskButton
+                                      taskId={taskId}
+                                      sectionId={sectionId}
                                     />
                                   </Flex>
                                 </Flex>

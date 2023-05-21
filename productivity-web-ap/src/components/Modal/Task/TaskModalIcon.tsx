@@ -21,7 +21,7 @@ import {
   Select,
   ModalHeader,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import TaskCategory from "./TaskCategory";
 import DateTimePicker from "react-datetime-picker/dist/entry.nostyle";
@@ -29,19 +29,93 @@ import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
 import { auth, db } from "@/firebase/clientApp";
 import { AddIcon } from "@chakra-ui/icons";
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 const TaskModalIcon: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [user] = useAuthState(auth);
-  const [taskName, setTaskName] = useState("Dummy");
-  const [desc, setDesc] = useState("This is a dummy description");
+  const [taskName, setTaskName] = useState("");
+  const [desc, setDesc] = useState("");
   const [dueDate, setDueDate] = useState(new Date());
-  const [priority, setPriority] = useState("1");
-  const [label, setLabel] = useState("read");
+  const [priority, setPriority] = useState("red.500");
+  // const [label, setLabel] = useState("read");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("Inbox");
+  // const [category, setCategory] = useState("Inbox");
+  const [userProjects, setUserProjects] = useState();
+  const [projectsArray, setProjectsArray] = useState({})
+  const [project, setProject] = useState();
+  const [idProject, setIdProject] = useState();
+  const [sectionId, setSectionId] = useState();
+  const [section, setSection] = useState();
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user) getUserProjects();
+  }, [user]);
+
+  useEffect(() => {
+    if (userProjects) {
+      // console.log("userProjects: ", userProjects);
+      getProject();
+    }
+  }, [userProjects]);
+
+  useEffect(() => {
+    // useEffect to get the sections of the project only when project state is assigned
+    if (idProject) {
+      // console.log("inbox id: ", idProject)
+      getSection();
+    }
+
+  }, [idProject]);
+
+  const getUserProjects = async () => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        // console.log(userSnap.data().projects);
+        setUserProjects(userSnap.data().projects);
+      }
+    }
+  };
+
+  const getProject = () => {
+    Object.keys(userProjects).map(async (projectId, index) => {
+      // console.log("projectId: ", userProjects[projectId])
+      const projectRef = doc(db, "projects", userProjects[projectId]);
+      const projectSnap = await getDoc(projectRef)
+        // console.log("Received Project: ", projectSnap.data());
+      // console.log(1)
+      if (projectSnap.exists() && projectSnap.data().projectName==="inbox") {
+        // console.log(2)
+          setProjectsArray((current) => ({
+            ...current,
+            [projectSnap.id]: projectSnap.data(),
+          }))
+          setIdProject(projectSnap.id)
+      }
+    });
+  };
+
+  const getSection = async () => {
+    // console.log("projectsArray[idProject].sections[0]: ", projectsArray[idProject].sections[0])
+    const secRef = doc(db, "sections", projectsArray[idProject].sections[0]);
+    const secSnap = await getDoc(secRef);
+    if (secSnap.exists()) {
+      // console.log("section data:", secSnap.data());
+      // console.log(3)
+      
+      setSection(secSnap.data());
+      setSectionId(secSnap.id);
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such section!");
+    }
+  };
+
 
   const handleChangeTask = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -53,9 +127,9 @@ const TaskModalIcon: React.FC = () => {
     setPriority(event.target.value);
     console.log(priority);
   };
-  const handleChangecategtory = (e: any) => {
-    setCategory(e.target.value);
-  };
+  // const handleChangecategtory = (e: any) => {
+  //   setCategory(e.target.value);
+  // };
 
   // const handleClose = () => {
   //   setModalState((prev) => ({
@@ -78,7 +152,7 @@ const TaskModalIcon: React.FC = () => {
         desc: desc,
         dueDate: dueDate,
         priority: priority,
-        label: label,
+        // label: label,
         isAssigned: false,
         assignedTo: null,
         isInProject: false,
@@ -86,6 +160,14 @@ const TaskModalIcon: React.FC = () => {
       };
       const taskDocRef = doc(collection(db, "tasks"));
       await setDoc(taskDocRef, data);
+      const taskId = taskDocRef.id;
+      if (sectionId) {
+        const secRef = doc(db, "sections", sectionId);
+        await updateDoc(secRef, {
+          tasks: arrayUnion(taskId),
+        });
+      }
+      router.reload();
       onClose();
     } catch (error: any) {
       console.log("handleCreateTask error", error);
@@ -171,7 +253,7 @@ const TaskModalIcon: React.FC = () => {
           </ModalBody>
 
           <ModalFooter>
-            <Button size="xs">
+            {/* <Button size="xs">
               <Select
                 value={category}
                 onChange={handleChangecategtory}
@@ -182,7 +264,7 @@ const TaskModalIcon: React.FC = () => {
                 <option value="Education">Education</option>
                 <option value="Home">Home</option>
               </Select>
-            </Button>
+            </Button> */}
             <Spacer />
             <Flex>
               <Button

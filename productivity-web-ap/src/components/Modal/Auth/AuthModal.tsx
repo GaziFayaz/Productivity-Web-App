@@ -20,14 +20,20 @@ import OAuthButtons from "./OAuthButtons";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/firebase/clientApp";
 import ResetPassword from "./ResetPassword";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 import { Router } from "next/router";
 
 const AuthModal: React.FC = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
   const [user, loading, error] = useAuthState(auth);
-  const [checkUser, setCheckUser] = useState(false)
+  const [checkUser, setCheckUser] = useState(false);
 
   const handleClose = () => {
     setModalState((prev) => ({
@@ -36,59 +42,70 @@ const AuthModal: React.FC = () => {
     }));
   };
 
-  useEffect( () => {
+  useEffect(() => {
     if (user) {
       console.log("user", user);
-      addUser()
+      addUser();
     }
   }, [user]);
 
-  useEffect ( () => {
-    if(checkUser) {
+  useEffect(() => {
+    if (checkUser) {
       handleClose();
     }
-  }, [checkUser])
+  }, [checkUser]);
 
   const addUser = async () => {
-    if(user){
-      const userDocRef = doc(db, "users", user.uid)
-      const userSnap = await getDoc(userDocRef)
-      if(!userSnap.exists()){
-
-        // const inboxSection = {
-
-        // }
-
-        // const inboxProject = {
-        //   creatorId: user?.uid,
-        //   createdAt: serverTimestamp(),
-        //   projectName:"inbox",
-        //   color:"1",
-        //   colorValue: "1",
-        //   numberOfMembers: 1,
-        //   members: [user?.uid],
-        //   numberOfSections: 1,
-        //   // sections: [section]
-        // }
-        const displayName = user.displayName? user.displayName : user.email
-        const userData= {
-          email: user.email,
-          name: displayName,
-          projects: [],
-        }
-        await setDoc(userDocRef, userData)
-        .then(() => {
-          setCheckUser(true)
-        })
-        .catch(() => {
-          console.log("Adding New User to Database Failed")
-        })
-      }
-      else setCheckUser(true)
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userDocRef);
+      if (!userSnap.exists()) {
+        //inbox Section
+        const section = {
+          creatorId: user?.uid,
+          createdAt: serverTimestamp(),
+          // fromProject:
+          sectionName: "inbox",
+          tasks: [],
+        };
+        const sectionDocRef = doc(collection(db, "sections"));
+        await setDoc(sectionDocRef, section).then(async () => {
+          console.log("Section Created: ", sectionDocRef);
+          // inbox Project
+          const project = {
+            creatorId: user?.uid,
+            createdAt: serverTimestamp(),
+            projectName: "inbox",
+            numberOfMembers: 1,
+            members: [user?.uid],
+            numberOfSections: 1,
+            sections: [sectionDocRef.id],
+          };
+          const projectDocRef = doc(collection(db, "projects"));
+          await setDoc(projectDocRef, project).then(async () => {
+            console.log("Project created: ", projectDocRef);
+            // User
+            const displayName = user.displayName
+              ? user.displayName
+              : user.email;
+            const userData = {
+              email: user.email,
+              name: displayName,
+              projects: [projectDocRef.id],
+            };
+            await setDoc(userDocRef, userData)
+              .then(() => {
+                console.log("User created: ", userDocRef);
+                setCheckUser(true);
+              })
+              .catch(() => {
+                console.log("Adding New User to Database Failed");
+              });
+          });
+        });
+      } else setCheckUser(true);
     }
-    
-    
-  }
+  };
 
   return (
     <>
