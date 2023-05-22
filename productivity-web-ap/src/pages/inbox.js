@@ -110,10 +110,7 @@ export default function Inbox() {
 
       setSection(secSnap.data());
       setSectionId(secSnap.id);
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such section!");
-    }
+    } 
   };
 
   const getTasks = async () => {
@@ -127,9 +124,7 @@ export default function Inbox() {
           ...current,
           [taskSnap.id]: taskSnap.data(),
         }));
-      } else {
-        console.log("No such task! taskId: ", taskSnap.id);
-      }
+      } 
     }
     // console.log(tasksArray[1].dueDate);
   };
@@ -230,11 +225,11 @@ export default function Inbox() {
                             Due date:
                             {dueDateStamp.toDate().toDateString()}
                           </Text>
-                          <Text fontSize="xs">
+                          {/* <Text fontSize="xs">
                             {" "}
                             Created:
                             {createdStamp.toDate().toDateString()}
-                          </Text>
+                          </Text> */}
                         </Flex>
                       </Flex>
                     </Flex>
@@ -309,11 +304,11 @@ export default function Inbox() {
                             Due date:
                             {dueDateStamp.toDate().toDateString()}
                           </Text>
-                          <Text fontSize="xs">
+                          {/* <Text fontSize="xs">
                             {" "}
                             Created:
                             {createdStamp.toDate().toLocaleString()}
-                          </Text>
+                          </Text> */}
                         </Flex>
                       </Flex>
                     </Flex>
@@ -382,11 +377,11 @@ export default function Inbox() {
                             Due date:
                             {dueDateStamp.toDate().toLocaleString()}
                           </Text>
-                          <Text fontSize="xs">
+                          {/* <Text fontSize="xs">
                             {" "}
                             Created:
                             {createdStamp.toDate().toLocaleString()}
-                          </Text>
+                          </Text> */}
                         </Flex>
                       </Flex>
                     </Flex>
@@ -455,11 +450,11 @@ export default function Inbox() {
                             Due date:
                             {dueDateStamp.toDate().toLocaleString()}
                           </Text>
-                          <Text fontSize="xs">
+                          {/* <Text fontSize="xs">
                             {" "}
                             Created:
                             {createdStamp.toDate().toLocaleString()}
-                          </Text>
+                          </Text> */}
                         </Flex>
                       </Flex>
                     </Flex>

@@ -328,13 +328,13 @@ const Project = () => {
                                             .toDate()
                                             .toLocaleString()}
                                         </Text>
-                                        <Text fontSize="xs">
+                                        {/* <Text fontSize="xs">
                                           {" "}
                                           Created:
                                           {createdStamp
                                             .toDate()
                                             .toLocaleString()}
-                                        </Text>
+                                        </Text> */}
                                       </Flex>
                                     </Flex>
                                   </Flex>
