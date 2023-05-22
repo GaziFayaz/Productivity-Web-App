@@ -67,7 +67,7 @@ const Project = () => {
           secret: user?.uid,
         },
         {
-          headers: { "Private-key": "25c27a98-f5d8-4114-a63f-30d13a318d15" },
+          headers: { "Private-key": "69f788b1-1b0c-4abf-9581-bb27d06d0b90" },
         }
       )
       .then((r) => router.push("/Chats/chats"));
