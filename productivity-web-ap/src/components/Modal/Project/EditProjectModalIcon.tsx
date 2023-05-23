@@ -89,7 +89,7 @@ const EditProjectModalIcon: React.FC = () => {
 
       try {
         // update the Project document in firestore
-        const projectDocRef = doc(db, "projects", projectId);
+        const projectDocRef = doc(db, "projects", projectId); 
         await updateDoc(projectDocRef, {
             projectName: projectName,
             color: color,

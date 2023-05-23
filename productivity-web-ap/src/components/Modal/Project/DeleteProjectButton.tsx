@@ -12,20 +12,22 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 
-const DeleteSectionButton = (project) => {
+const DeleteProjectButton = (project:any) => {
   const router = useRouter();
 
   const deleteTask = async () => {
     console.log(project);
-    project.project.sections.map(async (section) => {
+    project.project.sections.map(async (section:any) => {
       console.log(section);
       const secSnap = await getDoc(doc(db, "sections", section));
-      secSnap.data().tasks.map(async (task) => {
+      if(secSnap.exists()){
+        secSnap.data().tasks.map(async (task: any) => {
         console.log("Deleting task", task)
         await deleteDoc(doc(db, "tasks", task));
       });
       console.log("deleting section: ", section)
       await deleteDoc(doc(db, "sections", section));
+      }
     });
     console.log("deleting project: ", project.projectId)
     await deleteDoc(doc(db, "projects", project.projectId)).then(async() => {
@@ -43,4 +45,4 @@ const DeleteSectionButton = (project) => {
   );
 };
 
-export default DeleteSectionButton;
+export default DeleteProjectButton;

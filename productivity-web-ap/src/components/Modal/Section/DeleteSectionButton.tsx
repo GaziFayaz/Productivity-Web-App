@@ -5,12 +5,12 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 
-const DeleteSectionButton = (section) => {
+const DeleteSectionButton = (section: any) => {
   const router = useRouter();
 
   const deleteTask = async () => {
        console.log(section)
-    section.section.tasks.map(async (task) => {
+    section.section.tasks.map(async (task: any) => {
         await deleteDoc(doc(db, "tasks", task));
     });
     await deleteDoc(doc(db, "sections", section.sectionId)).then( async() => {
